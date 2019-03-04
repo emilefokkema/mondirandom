@@ -1,0 +1,9 @@
+{
+	"name":"Mondirandom",
+	"description":"Display a randomly generated Mondrian on every newly opened tab",
+	"version":"0.1",
+	"chrome_url_overrides": {
+	   "newtab": "index.html"
+	},
+	"manifest_version":2
+}
