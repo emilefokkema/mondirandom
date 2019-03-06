@@ -1,0 +1,29 @@
+{
+  "name": "mondirandom",
+  "version": "1.0.0",
+  "description": "A Chrome extension that displays a randomly generated Mondrian painting on every newly opened tab",
+  "scripts": {
+    "test": "node node_modules/jasmine/bin/jasmine.js",
+    "build": "browserify js/main.js | minify --js > dist/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emilefokkema/mondirandom.git"
+  },
+  "keywords": [
+    "mondrian"
+  ],
+  "author": "Emile Fokkema",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emilefokkema/mondirandom/issues"
+  },
+  "homepage": "https://github.com/emilefokkema/mondirandom#readme",
+  "dependencies": {
+    "browserify": "^16.2.3",
+    "minify": "^4.1.1"
+  },
+  "devDependencies": {
+    "jasmine": "^3.3.1"
+  }
+}
