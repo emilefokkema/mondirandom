@@ -1,3 +1,8 @@
+var ContinuousDistribution = function(from, to){
+	this.from = from;
+	this.to = to;
+};
+
 var Distribution = function(getValueWeight){
 	this.getValueWeight = getValueWeight || function(){return 1;};
 };
@@ -17,26 +22,6 @@ Distribution.prototype.add = function(other){
 	})(this.getValueWeight, other.getValueWeight);
 	return new Distribution(newGetValueWeight);
 };
-Distribution.prototype.getRandomValue = function(values){
-	var totalWeight = 0;
-	var weightedValues = [];
-	var i, value;
-	for(i=0;i<values.length;i++){
-		value = values[i];
-		var weight = this.getValueWeight(value);
-		totalWeight += weight;
-		weightedValues.push({value:value, weight:weight});
-	}
-	var cutOff = totalWeight * Math.random();
-	totalWeight = 0;
-	for(i=0;i<values.length;i++){
-		value = values[i];
-		totalWeight += weightedValues[i].weight;
-		if(totalWeight >= cutOff){
-			return value;
-		}
-	}
-};
 Distribution.prototype.except = function(value){
 	var newGetValueWeight = (function(old){
 		return function(v){
@@ -50,6 +35,9 @@ Distribution.only = function(singleValue){
 };
 Distribution.constant = function(){
 	return new Distribution();
+};
+Distribution.continuous = function(from, to){
+	return new ContinuousDistribution(from, to);
 };
 
 module.exports = Distribution;
