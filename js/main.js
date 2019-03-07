@@ -1,7 +1,7 @@
-(function(){
-	var FieldSplitter = require("./field-splitter.js");
-	var Distribution = require("./distribution.js");
-	var RandomValueProvider = require("./random-value-provider.js");
+var f = function(require){
+	var FieldSplitter = require("./field-splitter");
+	var Distribution = require("./distribution");
+	var RandomValueProvider = require("./random-value-provider");
 
 	var draw = function(width, height, canvasElement){
 		canvasElement.setAttribute("width", width);
@@ -15,4 +15,11 @@
 	};
 
 	draw(window.innerWidth, window.innerHeight, document.getElementById("canvas"));
-})();
+}
+
+if(typeof module !== "undefined" && typeof require == "function"){
+	module.exports = f(require);
+}
+else if(typeof define == "function" && typeof requirejs !== "undefined"){
+	define(f);
+}

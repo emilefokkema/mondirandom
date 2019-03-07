@@ -1,3 +1,11 @@
-var Direction = {HORIZONTAL:0,VERTICAL:1};
+var f = function(require){
+	var Direction = {HORIZONTAL:0,VERTICAL:1};
+	return Direction;
+}
 
-module.exports = Direction;
+if(typeof module !== "undefined" && typeof require == "function"){
+	module.exports = f(require);
+}
+else if(typeof define == "function"){
+	define(f);
+}
