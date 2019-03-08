@@ -25,8 +25,8 @@ describe("A rectangle", function(){
 		});
 		
 		it("should have a common side", function(){
-			var commonSide = instance.getCommonSideWith(otherOne);
-			expect(commonSide).toBeTruthy();
+			var commonSides = instance.getCommonSidesWith(otherOne);
+			expect(commonSides.length).toBeTruthy();
 		});
 	})
 });
