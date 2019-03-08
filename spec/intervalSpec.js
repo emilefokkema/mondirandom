@@ -29,6 +29,20 @@ describe("an interval", function(){
 		})
 	});
 	
+		describe("and an equal one", function(){
+		var equalOne;
+		
+		beforeEach(function(){
+			equalOne = new Interval(1, 3, new TestRandomValueProvider());
+		});
+		
+		it("should have an overlap", function(){
+			var overlap = instance.getOverlapWith(equalOne);
+			expect(overlap.from).toBe(1);
+			expect(overlap.to).toBe(3);
+		})
+	});
+	
 		describe("and another overlapping one", function(){
 		var overlappingOne;
 		
