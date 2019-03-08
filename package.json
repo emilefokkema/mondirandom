@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A Chrome extension that displays a randomly generated Mondrian painting on every newly opened tab",
   "scripts": {
-    "test": "jasmine",
+    "test": "node node_modules/jasmine/bin/jasmine.js",
     "build": "node build.js"
   },
   "repository": {
