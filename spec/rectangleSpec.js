@@ -1,6 +1,7 @@
 describe("A rectangle", function(){
 	var Rectangle = require("../js/rectangle.js");
 	var Interval = require("../js/interval.js");
+	var Direction = require("../js/direction.js")
 	var instance;
 
 	beforeEach(function(){
@@ -26,7 +27,12 @@ describe("A rectangle", function(){
 		
 		it("should have a common side", function(){
 			var commonSides = instance.getCommonSidesWith(otherOne);
-			expect(commonSides.length).toBeTruthy();
+			expect(commonSides.length).toBe(1);
+				var commonSide = commonSides[0];
+		expect(commonSide.direction).toBe(Direction.VERTICAL);
+		expect(commonSide.interval.from).toBe(0);
+		expect(commonSide.interval.to).toBe(1);
 		});
+	
 	})
 });
