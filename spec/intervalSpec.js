@@ -11,6 +11,10 @@ describe("an interval", function(){
 		expect(instance.length).toBe(2);
 	});
 	
+	it("should contain a point", function(){
+		expect(instance.contains(2)).toBe(true);
+	});
+	
 	describe("and an overlapping one", function(){
 		var overlappingOne;
 		
@@ -18,8 +22,10 @@ describe("an interval", function(){
 			overlappingOne = new Interval(2, 4, new TestRandomValueProvider());
 		});
 		
-		xit("should have an overlap", function(){
+		it("should have an overlap", function(){
 			var overlap = instance.getOverlapWith(overlappingOne);
+			expect(overlap.from).toBe(2);
+			expect(overlap.to).toBe(3);
 		})
 	})
 });
