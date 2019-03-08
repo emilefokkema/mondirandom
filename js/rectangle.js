@@ -38,9 +38,9 @@ Rectangle.prototype.withHorizontalInterval = function(horizontalInterval){
 	};
 	Rectangle.prototype.getCommonSidesWith = function(other){
 		var result = [];
-		for(var i = 0; i < 3; i++){
+		for(var i = 0; i < 4; i++){
 			var thisSide = this.sides[i];
-			for(var j = 0; j < 3; j++){
+			for(var j = 0; j < 4; j++){
 				var otherSide = other.sides[j];
 				var overlap = thisSide.getOverlapWith(otherSide);
 				if(overlap){

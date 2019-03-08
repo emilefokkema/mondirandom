@@ -20,26 +20,15 @@ var f = function(require){
 		return point >= this.from && point <= this.to;
 	};
 	Interval.prototype.getOverlapWith = function(other){
-		var allPoints = [this.from, this.to, other.from, other.to];
-		var sorted = allPoints.sort();
-		var from, to;
-		for(var i = 0; i < 4; i++){
-			var point = sorted[i];
-			if(this.contains(point) && other.contains(point)){
-				if(from == undefined){
-					from = point;
-					continue;
-				}
-				if(to == undefined){
-					to = point;
-					break;
-				}
-			}
+		if(this.to <= other.from || this.from >= other.to){
+			return null;
 		}
-		if(from !== undefined){
-			return new Interval(from, to, this.randomValueProvider);
+		var min = Math.max(this.from, other.from);
+		var max = Math.min(this.to, other.to);
+		if(min == max){
+			return null;
 		}
-		return null;
+		return new Interval(min, max, this.randomValueProvider);
 	};
 	Interval.around = function(point, radius, randomValueProvider){
 		return new Interval(point - radius, point + radius, randomValueProvider);
