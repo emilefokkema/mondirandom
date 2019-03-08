@@ -33,5 +33,31 @@ describe("an side", function(){
 			
 			
 		})
-	})
+	});
+		describe("and one with a different direction", function(){
+		var oneWithDifferentDirection;
+		
+		beforeEach(function(){
+			var interval = new Interval(-1, 1, new TestRandomValueProvider());
+			oneWithDifferentDirection = new Side(interval, 2, Direction.VERTICAL);
+		});
+		
+		it("should not have an overlapping side", function(){
+			var overlappingSide = instance.getOverlapWith(oneWithDifferentDirection);
+			expect(overlappingSide).toBeFalsy();
+		})
+	});
+			describe("and one with a different position", function(){
+		var oneWithDifferentPosition;
+		
+		beforeEach(function(){
+			var interval = new Interval(1, 3, new TestRandomValueProvider());
+			oneWithDifferentPosition = new Side(interval, 1, Direction.HORIZONTAL);
+		});
+		
+		it("should not have an overlapping side", function(){
+			var overlappingSide = instance.getOverlapWith(oneWithDifferentPosition);
+			expect(overlappingSide).toBeFalsy();
+		})
+	});
 });
