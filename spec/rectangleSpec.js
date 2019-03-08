@@ -16,4 +16,16 @@ describe("A rectangle", function(){
 		var newRectangle = instance.withHorizontalInterval(newInterval);
 		expect(newRectangle.area).toBe(3);
 	});
+	
+	describe("and another one", function(){
+		var otherOne;
+		
+		beforeEach(function(){
+			otherOne = Rectangle.create(2, 0, 1, 1);
+		});
+		
+		xit("should have a common side", function(){
+			var commonSide = instance.commonSideWith(otherOne);
+		});
+	})
 });
