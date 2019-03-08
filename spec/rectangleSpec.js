@@ -17,15 +17,16 @@ describe("A rectangle", function(){
 		expect(newRectangle.area).toBe(3);
 	});
 	
-	describe("and another one", function(){
+	describe("and a touching one", function(){
 		var otherOne;
 		
 		beforeEach(function(){
 			otherOne = Rectangle.create(2, 0, 1, 1);
 		});
 		
-		xit("should have a common side", function(){
-			var commonSide = instance.commonSideWith(otherOne);
+		it("should have a common side", function(){
+			var commonSide = instance.getCommonSideWith(otherOne);
+			expect(commonSide).toBeTruthy();
 		});
 	})
 });
