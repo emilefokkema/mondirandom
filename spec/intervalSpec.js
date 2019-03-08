@@ -27,5 +27,31 @@ describe("an interval", function(){
 			expect(overlap.from).toBe(2);
 			expect(overlap.to).toBe(3);
 		})
-	})
+	});
+	
+		describe("and another overlapping one", function(){
+		var overlappingOne;
+		
+		beforeEach(function(){
+			overlappingOne = new Interval(0, 2, new TestRandomValueProvider());
+		});
+		
+		it("should have an overlap", function(){
+			var overlap = instance.getOverlapWith(overlappingOne);
+			expect(overlap.from).toBe(1);
+			expect(overlap.to).toBe(2);
+		})
+	});
+	 describe("a non-overlapping one", function(){
+		var nonOverlappingOne;
+		
+		beforeEach(function(){
+			nonOverlappingOne = new Interval(4, 5, new TestRandomValueProvider());
+		});
+		
+		it("should not have an overlap", function(){
+			var overlap = instance.getOverlapWith(nonOverlappingOne);
+			expect(overlap).toBe(null);
+		})
+	});
 });
