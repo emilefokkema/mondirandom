@@ -42,7 +42,20 @@ describe("an interval", function(){
 			expect(overlap.to).toBe(2);
 		})
 	});
-	 describe("a non-overlapping one", function(){
+			describe("and a touching one", function(){
+		var touchingOne;
+		
+		beforeEach(function(){
+			touchingOne = new Interval(3, 4, new TestRandomValueProvider());
+		});
+		
+		it("should have an overlap", function(){
+			var overlap = instance.getOverlapWith(touchingOne);
+			expect(overlap.from).toBe(3);
+			expect(overlap.to).toBe(3);
+		})
+	});
+	 describe("and a non-overlapping one", function(){
 		var nonOverlappingOne;
 		
 		beforeEach(function(){
