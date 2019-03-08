@@ -63,10 +63,9 @@ describe("an interval", function(){
 			touchingOne = new Interval(3, 4, new TestRandomValueProvider());
 		});
 		
-		it("should have an overlap", function(){
+		it("should not have an overlap", function(){
 			var overlap = instance.getOverlapWith(touchingOne);
-			expect(overlap.from).toBe(3);
-			expect(overlap.to).toBe(3);
+			expect(overlap).toBeFalsy();
 		})
 	});
 	 describe("and a non-overlapping one", function(){
