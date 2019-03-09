@@ -34,5 +34,48 @@ describe("A rectangle", function(){
 		expect(commonSide.interval.to).toBe(1);
 		});
 	
+	});
+		describe("and a partly touching one", function(){
+		var otherOne;
+		
+		beforeEach(function(){
+			otherOne = Rectangle.create(2, 0.5, 1, 1);
+		});
+		
+		it("should have a common side", function(){
+			var commonSides = instance.getCommonSidesWith(otherOne);
+			expect(commonSides.length).toBe(1);
+				var commonSide = commonSides[0];
+		expect(commonSide.direction).toBe(Direction.VERTICAL);
+		expect(commonSide.interval.from).toBe(0.5);
+		expect(commonSide.interval.to).toBe(1);
+		});
+	
+	});
+		describe("and a disjoint one", function(){
+		var otherOne;
+		
+		beforeEach(function(){
+			otherOne = Rectangle.create(3, 0, 1, 1);
+		});
+		
+		it("should not have a common side", function(){
+			var commonSides = instance.getCommonSidesWith(otherOne);
+			expect(commonSides.length).toBe(0);
+		});
+	
+	});
+		describe("and an intersecting one", function(){
+		var otherOne;
+		
+		beforeEach(function(){
+			otherOne = Rectangle.create(0.5, 0.5, 1, 1);
+		});
+		
+		it("should not have a common side", function(){
+			var commonSides = instance.getCommonSidesWith(otherOne);
+			expect(commonSides.length).toBe(0);
+		});
+	
 	})
 });
