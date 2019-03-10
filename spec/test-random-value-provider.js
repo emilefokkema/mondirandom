@@ -4,13 +4,13 @@ var TestRandomValueProvider = function(){
 	this.randomColor = undefined;
 	this.randomRatio = undefined;
 };
-TestRandomValueProvider.prototype.provideRandomField = function(distribution, fields){
+TestRandomValueProvider.prototype.provideRandomField = function(fieldSplitter){
 	return this.randomField;
 };
-TestRandomValueProvider.prototype.provideRandomDirection = function(distribution){
+TestRandomValueProvider.prototype.provideRandomDirection = function(field){
 	return this.randomDirection;
 };
-TestRandomValueProvider.prototype.provideRandomColor = function(distribution){
+TestRandomValueProvider.prototype.provideRandomColor = function(field, initialDistribution){
 	return this.randomColor;
 };
 TestRandomValueProvider.prototype.provideRandomRatio = function(){

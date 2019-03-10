@@ -11,7 +11,8 @@ var f = function(require){
 		this.totalArea = width * height;
 		this.smallestRelativeArea = 1;
 		this.fields = [this.createField(Rectangle.create(0, 0, width, height, randomValueProvider))];
-		this.distribution = new Distribution(function(f){return f.relativeArea;}).add(Distribution.constant().scale(0.05));
+	};	FieldSplitter.prototype.getFieldDistribution = function(){
+		return new Distribution(function(f){return f.relativeArea;}).add(Distribution.constant().scale(0.05));
 	};
 	FieldSplitter.prototype.createField = function(rectangle){
 		var relativeArea = rectangle.area / this.totalArea;
@@ -20,7 +21,7 @@ var f = function(require){
 	};
 	FieldSplitter.prototype.splitRandomField = function(){
 		var self = this;
-		var field = this.randomValueProvider.provideRandomField(this.distribution, this.fields);
+		var field = this.randomValueProvider.provideRandomField(this);
 		var index = this.fields.indexOf(field);
 		var split = field.split(this.createField.bind(this));
 		this.borders.push(split.border);

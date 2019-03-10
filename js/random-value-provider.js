@@ -27,14 +27,18 @@ var f = function(require){
 		this.colors = [Color.RED, Color.BLUE, Color.YELLOW, Color.WHITE, Color.BLACK];
 		this.directions = [Direction.VERTICAL, Direction.HORIZONTAL];
 	};
-	RandomValueProvider.prototype.provideRandomField = function(distribution, fields){
+	RandomValueProvider.prototype.provideRandomField = function(fieldSplitter){
+		var distribution = fieldSplitter.getFieldDistribution();
+		var fields = fieldSplitter.fields;
 		return getRandomValue(distribution.getValueWeight, fields);
 	};
-	RandomValueProvider.prototype.provideRandomDirection = function(distribution){
+	RandomValueProvider.prototype.provideRandomDirection = function(field){
+		var distribution = field.getDirectionDistribution();
 		return getRandomValue(distribution.getValueWeight, this.directions);
 	};
-	RandomValueProvider.prototype.provideRandomColor = function(distribution){
-		return getRandomValue(distribution.getValueWeight, this.colors);
+	RandomValueProvider.prototype.provideRandomColor = function(field, initialDistribution){
+		var colorDistribution = field.getColorDistribution(initialDistribution);
+		return getRandomValue(colorDistribution.getValueWeight, this.colors);
 	};
 	RandomValueProvider.prototype.provideRandomRatio = function(continuousDistribution){
 		return continuousDistribution.from + Math.random() * (continuousDistribution.to - continuousDistribution.from);

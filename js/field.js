@@ -8,21 +8,20 @@ var f = function(require){
 		this.rectangle = rectangle;
 		this.borderThickness = borderThickness;
 		this.relativeArea = relativeArea;
-		this.directionDistribution = this.getDirectionDistribution(rectangle);
 	};
-	Field.prototype.getDirectionDistribution = function(rectangle){
-		var result = Distribution.only(Direction.HORIZONTAL).scale(rectangle.verticalInterval.length)
-			.add(Distribution.only(Direction.VERTICAL).scale(rectangle.horizontalInterval.length));
-		if(rectangle.verticalInterval.length > 10 * rectangle.horizontalInterval.length){
+	Field.prototype.getDirectionDistribution = function(){
+		var result = Distribution.only(Direction.HORIZONTAL).scale(this.rectangle.verticalInterval.length)
+			.add(Distribution.only(Direction.VERTICAL).scale(this.rectangle.horizontalInterval.length));
+		if(this.rectangle.verticalInterval.length > 10 * this.rectangle.horizontalInterval.length){
 			result = result.except(Direction.VERTICAL);
 		}
-		if(rectangle.horizontalInterval.length > 10 * rectangle.verticalInterval.length){
+		if(this.rectangle.horizontalInterval.length > 10 * this.rectangle.verticalInterval.length){
 			result = result.except(Direction.HORIZONTAL);
 		}
 		return result;
 	};
 	Field.prototype.split = function(createField){
-		var direction = this.randomValueProvider.provideRandomDirection(this.directionDistribution);
+		var direction = this.randomValueProvider.provideRandomDirection(this);
 		var self = this;
 		var rectangleSplit = direction == Direction.VERTICAL ? 
 			this.rectangle.splitVertical(this.borderThickness) : 
@@ -32,9 +31,11 @@ var f = function(require){
 			border: rectangleSplit.border
 		};
 	};
+	Field.prototype.getColorDistribution = function(initialDistribution){
+		return initialDistribution.add(Distribution.only(Color.WHITE).scale(this.relativeArea));
+	};
 	Field.prototype.draw = function(context, colorDistribution){
-		colorDistribution = colorDistribution.add(Distribution.only(Color.WHITE).scale(this.relativeArea));
-		var color = this.randomValueProvider.provideRandomColor(colorDistribution);
+		var color = this.randomValueProvider.provideRandomColor(this, colorDistribution);
 		this.rectangle.draw(context, color);
 	};
 	return Field;
