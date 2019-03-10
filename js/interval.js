@@ -1,19 +1,18 @@
 var f = function(require){
 	var Distribution = require("./distribution");
 
-	var Interval = function(from, to, randomValueProvider){
-		this.randomValueProvider = randomValueProvider;
+	var Interval = function(from, to){
 		this.from = from;
 		this.to = to;
 		this.length = this.to - this.from;
 		this.splitPointDistribution = Distribution.continuous(0.1, 0.9);
 	};
-	Interval.prototype.split = function(){
-		var ratio = this.randomValueProvider.provideRandomRatio(this.splitPointDistribution);
+	Interval.prototype.split = function(randomValueProvider){
+		var ratio = randomValueProvider.provideRandomRatio(this.splitPointDistribution);
 		var newPoint = this.from + ratio * this.length;
 		return {
 			splitPoint:newPoint,
-			intervals: [new Interval(this.from, newPoint, this.randomValueProvider), new Interval(newPoint, this.to, this.randomValueProvider)]
+			intervals: [new Interval(this.from, newPoint), new Interval(newPoint, this.to)]
 		};
 	};
 	Interval.prototype.contains = function(point){
@@ -28,10 +27,10 @@ var f = function(require){
 		if(min == max){
 			return null;
 		}
-		return new Interval(min, max, this.randomValueProvider);
+		return new Interval(min, max);
 	};
-	Interval.around = function(point, radius, randomValueProvider){
-		return new Interval(point - radius, point + radius, randomValueProvider);
+	Interval.around = function(point, radius){
+		return new Interval(point - radius, point + radius);
 	};
 	return Interval;
 }

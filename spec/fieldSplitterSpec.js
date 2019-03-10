@@ -9,7 +9,7 @@ describe("A FieldSplitter", function(){
 
 	beforeEach(function(){
 		randomValueProvider = new TestRandomValueProvider();
-		instance = new FieldSplitter(10, 10, randomValueProvider, 1);
+		instance = new FieldSplitter(10, 10, 1);
 	});
 
 	it("should be there", function(){
@@ -22,7 +22,7 @@ describe("A FieldSplitter", function(){
 			randomValueProvider.randomField = instance.fields[0];
 			randomValueProvider.randomDirection = Direction.VERTICAL;
 			randomValueProvider.randomRatio = 0.2;
-			instance.splitRandomField();
+			instance.splitRandomField( randomValueProvider);
 		});
 
 		it("should have two fields and one border", function(){
@@ -39,7 +39,7 @@ describe("A FieldSplitter", function(){
 				fakeContext = new FakeContext();
 				spyOn(fakeContext,'fillRect');
 				fillStyleSpy = spyOnProperty(fakeContext, 'fillStyle', 'set');
-				instance.draw(fakeContext);
+				instance.draw(fakeContext, randomValueProvider);
 			});
 
 			it("should draw two rectangles", function(){

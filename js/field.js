@@ -3,8 +3,7 @@ var f = function(require){
 	var Color = require("./color");
 	var Distribution = require("./distribution");
 
-	var Field = function(rectangle, relativeArea, randomValueProvider, borderThickness){
-		this.randomValueProvider = randomValueProvider;
+	var Field = function(rectangle, relativeArea, borderThickness){
 		this.rectangle = rectangle;
 		this.borderThickness = borderThickness;
 		this.relativeArea = relativeArea;
@@ -20,12 +19,12 @@ var f = function(require){
 		}
 		return result;
 	};
-	Field.prototype.split = function(createField){
-		var direction = this.randomValueProvider.provideRandomDirection(this);
+	Field.prototype.split = function(createField, randomValueProvider){
+		var direction = randomValueProvider.provideRandomDirection(this);
 		var self = this;
 		var rectangleSplit = direction == Direction.VERTICAL ? 
-			this.rectangle.splitVertical(this.borderThickness) : 
-			this.rectangle.splitHorizontal(this.borderThickness);
+			this.rectangle.splitVertical(this.borderThickness, randomValueProvider) : 
+			this.rectangle.splitHorizontal(this.borderThickness, randomValueProvider);
 		return {
 			fields: rectangleSplit.rectangles.map(createField),
 			border: rectangleSplit.border
@@ -34,8 +33,8 @@ var f = function(require){
 	Field.prototype.getColorDistribution = function(initialDistribution){
 		return initialDistribution.add(Distribution.only(Color.WHITE).scale(this.relativeArea));
 	};
-	Field.prototype.draw = function(context, colorDistribution){
-		var color = this.randomValueProvider.provideRandomColor(this, colorDistribution);
+	Field.prototype.draw = function(context, colorDistribution, randomValueProvider){
+		var color = randomValueProvider.provideRandomColor(this, colorDistribution);
 		this.rectangle.draw(context, color);
 	};
 	return Field;
