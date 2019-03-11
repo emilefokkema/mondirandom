@@ -5,6 +5,7 @@ describe("A FieldSplitter", function(){
 	var Direction = require("../js/direction.js");
 	var TestRandomValueProvider = require("./test-random-value-provider.js");
 	var instance;
+	var initialField;
 	
 	var splitFieldInDirection = function(field, direction, ratio){
 		var randomValueProvider = new TestRandomValueProvider();
@@ -12,6 +13,12 @@ describe("A FieldSplitter", function(){
 		randomValueProvider.randomDirection = direction;
 		randomValueProvider.randomRatio = ratio;
 		instance.splitRandomField(randomValueProvider);
+	};
+	var checkNeighbors = function(field, expectedNeighbors){
+		expect(field.neighbors.length).toBe(expectedNeighbors.length);
+		for(var i=0;i<expectedNeighbors.length;i++){
+			expect(field.neighbors).toContain(expectedNeighbors[i]);
+		}
 	};
 	var drawFieldsInColors = function(fieldColors, context){
 		var randomValueProvider = new TestRandomValueProvider();
@@ -21,6 +28,7 @@ describe("A FieldSplitter", function(){
 
 	beforeEach(function(){
 		instance = new FieldSplitter(10, 10, 1);
+		initialField = instance.fields[0];
 	});
 
 	it("should be there", function(){
@@ -47,29 +55,46 @@ describe("A FieldSplitter", function(){
 		});
 
 		it("each field should have two neighbors", function(){
-			expect(topLeftField.neighbors.length).toBe(2);
-			expect(topLeftField.neighbors).toContain(bottomLeftField);
-			expect(topLeftField.neighbors).toContain(rightField);
+			checkNeighbors(topLeftField, [bottomLeftField, rightField]);
+			checkNeighbors(bottomLeftField, [topLeftField, rightField]);
+			checkNeighbors(rightField, [topLeftField, bottomLeftField]);
+		});
 
-			expect(bottomLeftField.neighbors.length).toBe(2);
-			expect(bottomLeftField.neighbors).toContain(topLeftField);
-			expect(bottomLeftField.neighbors).toContain(rightField);
+		describe("and then another one", function(){
+			var topLeftLeftField, topLeftRightField;
 
-			expect(rightField.neighbors.length).toBe(2);
-			expect(rightField.neighbors).toContain(topLeftField);
-			expect(rightField.neighbors).toContain(bottomLeftField);
+			beforeEach(function(){
+				splitFieldInDirection(topLeftField, Direction.VERTICAL, 0.4);
+				topLeftLeftField = instance.fields.find(function(f){return f.rectangle.horizontalInterval.from == 0 && f.rectangle.horizontalInterval.to == 2;});
+				topLeftRightField = instance.fields.find(function(f){return f.rectangle.horizontalInterval.from == 2 && f.rectangle.horizontalInterval.to == 5;});
+			});
+
+			it("some fields should have three neighbors", function(){
+				checkNeighbors(topLeftLeftField, [topLeftRightField, bottomLeftField]);
+				checkNeighbors(topLeftRightField, [topLeftLeftField, bottomLeftField, rightField]);
+				checkNeighbors(bottomLeftField, [topLeftLeftField, topLeftRightField, rightField]);
+				checkNeighbors(rightField, [topLeftRightField, bottomLeftField]);
+			});
 		});
 	});
 
 	describe("when it splits a random field", function(){
+		var field1, field2;
 
 		beforeEach(function(){
-			splitFieldInDirection(instance.fields[0], Direction.VERTICAL, 0.2);
+			splitFieldInDirection(initialField, Direction.VERTICAL, 0.2);
+			field1 = instance.fields[0];
+			field2 = instance.fields[1];
 		});
 
 		it("should have two fields and one border", function(){
 			expect(instance.fields.length).toBe(2);
 			expect(instance.borders.length).toBe(1);
+		});
+
+		it("each field should have the other as neighbor", function(){
+			checkNeighbors(field1, [field2]);
+			checkNeighbors(field2, [field1]);
 		});
 
 		describe("and it is drawn", function(){
