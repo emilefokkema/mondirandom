@@ -4,6 +4,7 @@ var f = function(require){
 	var Distribution = require("./distribution");
 
 	var Field = function(rectangle, relativeArea, borderThickness){
+		this.neighbors = [];
 		this.rectangle = rectangle;
 		this.borderThickness = borderThickness;
 		this.relativeArea = relativeArea;
@@ -19,14 +20,34 @@ var f = function(require){
 		}
 		return result;
 	};
+	Field.prototype.findNeighbors = function(candidates){
+		for(var i=0;i<candidates.length;i++){
+			var candidate = candidates[i];
+			var commonSides = this.rectangle.getCommonSidesWith(candidate.rectangle);
+			if(commonSides.length > 0){
+				this.neighbors.push(candidate);
+			}
+		}
+	};
+	Field.prototype.notifyNeighborSplit = function(oldNeighbor, newField1, newField2){
+		var oldNeighborIndex = this.neighbors.indexOf(oldNeighbor);
+		this.neighbors.splice(oldNeighborIndex, 1);
+		this.findNeighbors([newField1, newField2]);
+	};
 	Field.prototype.split = function(createField, randomValueProvider){
 		var direction = randomValueProvider.provideRandomDirection(this);
 		var self = this;
 		var rectangleSplit = direction == Direction.VERTICAL ? 
 			this.rectangle.splitVertical(this.borderThickness, randomValueProvider) : 
 			this.rectangle.splitHorizontal(this.borderThickness, randomValueProvider);
+		var newFields = rectangleSplit.rectangles.map(createField);
+		newFields[0].findNeighbors(this.neighbors.concat([newFields[1]]));
+		newFields[1].findNeighbors(this.neighbors.concat([newFields[0]]));
+		for(var i=0;i<this.neighbors.length;i++){
+			this.neighbors[i].notifyNeighborSplit(this, newFields[0], newFields[1]);
+		}
 		return {
-			fields: rectangleSplit.rectangles.map(createField),
+			fields: newFields,
 			border: rectangleSplit.border
 		};
 	};

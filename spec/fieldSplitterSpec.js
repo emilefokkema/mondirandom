@@ -46,7 +46,7 @@ describe("A FieldSplitter", function(){
 			expect(rightField).toBeTruthy();
 		});
 
-		xit("each field should have two neighbors", function(){
+		it("each field should have two neighbors", function(){
 			expect(topLeftField.neighbors.length).toBe(2);
 			expect(topLeftField.neighbors).toContain(bottomLeftField);
 			expect(topLeftField.neighbors).toContain(rightField);
