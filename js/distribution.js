@@ -1,4 +1,6 @@
 var f = function(require){
+	var WeightedValueSet = require("./weighted-value-set");
+
 	var ContinuousDistribution = function(from, to){
 		this.from = from;
 		this.to = to;
@@ -14,6 +16,9 @@ var f = function(require){
 			};
 		})(this.getValueWeight);
 		return new Distribution(newGetValueWeight);
+	};
+	Distribution.prototype.getWeightedValues = function(values){
+		return new WeightedValueSet(values, this.getValueWeight);
 	};
 	Distribution.prototype.add = function(other){
 		var newGetValueWeight = (function(one, two){
