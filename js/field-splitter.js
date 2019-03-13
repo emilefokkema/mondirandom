@@ -4,8 +4,8 @@ var f = function(require){
 	var Color = require("./color");
 	var Distribution = require("./distribution");
 
-	var FieldSplitter = function(width, height, borderThickness){
-		this.borderThickness = borderThickness;
+	var FieldSplitter = function(width, height, configuration){
+		this.configuration = configuration;
 		this.borders = [];
 		this.totalArea = width * height;
 		this.smallestRelativeArea = 1;
@@ -16,7 +16,7 @@ var f = function(require){
 	FieldSplitter.prototype.createField = function(rectangle){
 		var relativeArea = rectangle.area / this.totalArea;
 		this.smallestRelativeArea = Math.min(this.smallestRelativeArea, relativeArea);
-		return new Field(rectangle, relativeArea, this.borderThickness);
+		return new Field(rectangle, relativeArea, this.configuration.borderThickness, this.configuration.maxSplittableRatio);
 	};
 	FieldSplitter.prototype.splitRandomField = function(randomValueProvider){
 		var self = this;

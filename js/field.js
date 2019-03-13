@@ -3,7 +3,8 @@ var f = function(require){
 	var Color = require("./color");
 	var Distribution = require("./distribution");
 
-	var Field = function(rectangle, relativeArea, borderThickness){
+	var Field = function(rectangle, relativeArea, borderThickness, maxSplittableRatio){
+		this.maxSplittableRatio = maxSplittableRatio;
 		this.neighbors = [];
 		this.rectangle = rectangle;
 		this.borderThickness = borderThickness;
@@ -12,10 +13,10 @@ var f = function(require){
 	Field.prototype.getDirectionDistribution = function(){
 		var result = Distribution.only(Direction.HORIZONTAL).scale(this.rectangle.verticalInterval.length)
 			.add(Distribution.only(Direction.VERTICAL).scale(this.rectangle.horizontalInterval.length));
-		if(this.rectangle.verticalInterval.length > 10 * this.rectangle.horizontalInterval.length){
+		if(this.rectangle.verticalInterval.length > this.maxSplittableRatio * this.rectangle.horizontalInterval.length){
 			result = result.except(Direction.VERTICAL);
 		}
-		if(this.rectangle.horizontalInterval.length > 10 * this.rectangle.verticalInterval.length){
+		if(this.rectangle.horizontalInterval.length > this.maxSplittableRatio * this.rectangle.verticalInterval.length){
 			result = result.except(Direction.HORIZONTAL);
 		}
 		return result;

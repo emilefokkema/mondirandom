@@ -27,7 +27,7 @@ describe("A FieldSplitter", function(){
 	};
 
 	beforeEach(function(){
-		instance = new FieldSplitter(10, 10, 1);
+		instance = new FieldSplitter(10, 10, {borderThickness: 1});
 		initialField = instance.fields[0];
 	});
 
