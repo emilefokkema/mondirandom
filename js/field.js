@@ -5,6 +5,7 @@ var f = function(require){
 
 	var Field = function(rectangle, fieldSplitter, configuration){
 		this.maxSplittableRatio = configuration.maxSplittableRatio;
+		this.lowestColorDistributionFactor = configuration.lowestColorDistributionFactor;
 		this.neighbors = [];
 		this.rectangle = rectangle;
 		this.borderThickness = configuration.borderThickness;
@@ -54,7 +55,7 @@ var f = function(require){
 		};
 	};
 	Field.prototype.getColorDistribution = function(){
-		var initialDistribution = Distribution.constant().scale(this.fieldSplitter.smallestRelativeArea * 10);
+		var initialDistribution = Distribution.constant().scale(this.fieldSplitter.smallestRelativeArea * this.lowestColorDistributionFactor);
 		return initialDistribution.add(Distribution.only(Color.WHITE).scale(this.relativeArea));
 	};
 	Field.prototype.draw = function(context, randomValueProvider){

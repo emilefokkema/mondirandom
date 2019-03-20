@@ -4,16 +4,10 @@ describe("A FieldSplitter", function(){
 	var FakeContext = require("./fake-context.js");
 	var Direction = require("../js/direction.js");
 	var TestRandomValueProvider = require("./test-random-value-provider.js");
+	var splitFieldInDirection = require("./split-field-in-direction.js");
 	var instance;
 	var initialField;
 	
-	var splitFieldInDirection = function(field, direction, ratio){
-		var randomValueProvider = new TestRandomValueProvider();
-		randomValueProvider.randomField = field;
-		randomValueProvider.randomDirection = direction;
-		randomValueProvider.randomRatio = ratio;
-		instance.splitRandomField(randomValueProvider);
-	};
 	var checkNeighbors = function(field, expectedNeighbors){
 		expect(field.neighbors.length).toBe(expectedNeighbors.length);
 		for(var i=0;i<expectedNeighbors.length;i++){
@@ -39,9 +33,9 @@ describe("A FieldSplitter", function(){
 		var bottomLeftField, topLeftField, rightField;
 
 		beforeEach(function(){
-			splitFieldInDirection(instance.fields[0], Direction.VERTICAL, 0.5);
+			splitFieldInDirection(instance, instance.fields[0], Direction.VERTICAL, 0.5);
 			var leftField = instance.fields.find(function(f){return f.rectangle.horizontalInterval.from == 0;});
-			splitFieldInDirection(leftField, Direction.HORIZONTAL, 0.5);
+			splitFieldInDirection(instance, leftField, Direction.HORIZONTAL, 0.5);
 			bottomLeftField = instance.fields.find(function(f){return f.rectangle.horizontalInterval.from == 0 && f.rectangle.verticalInterval.from == 0;});
 			topLeftField = instance.fields.find(function(f){return f.rectangle.horizontalInterval.from == 0 && f.rectangle.verticalInterval.from == 5;});
 			rightField = instance.fields.find(function(f){return f.rectangle.horizontalInterval.from == 5 ;});
@@ -64,7 +58,7 @@ describe("A FieldSplitter", function(){
 			var topLeftLeftField, topLeftRightField;
 
 			beforeEach(function(){
-				splitFieldInDirection(topLeftField, Direction.VERTICAL, 0.4);
+				splitFieldInDirection(instance, topLeftField, Direction.VERTICAL, 0.4);
 				topLeftLeftField = instance.fields.find(function(f){return f.rectangle.horizontalInterval.from == 0 && f.rectangle.horizontalInterval.to == 2;});
 				topLeftRightField = instance.fields.find(function(f){return f.rectangle.horizontalInterval.from == 2 && f.rectangle.horizontalInterval.to == 5;});
 			});
@@ -82,7 +76,7 @@ describe("A FieldSplitter", function(){
 		var field1, field2;
 
 		beforeEach(function(){
-			splitFieldInDirection(initialField, Direction.VERTICAL, 0.2);
+			splitFieldInDirection(instance, initialField, Direction.VERTICAL, 0.2);
 			field1 = instance.fields[0];
 			field2 = instance.fields[1];
 		});

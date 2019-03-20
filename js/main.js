@@ -10,7 +10,8 @@ var f = function(require){
 		var randomValueProvider = new RandomValueProvider();
 		var configuration = {
 			borderThickness: 5,
-			maxSplittableRatio: 10
+			maxSplittableRatio: 10,
+			lowestColorDistributionFactor: 10
 		};
 		var splitter = new FieldSplitter(width, height, configuration);
 		for(var i=0;i<40;i++){
