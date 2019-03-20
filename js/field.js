@@ -3,12 +3,13 @@ var f = function(require){
 	var Color = require("./color");
 	var Distribution = require("./distribution");
 
-	var Field = function(rectangle, relativeArea, borderThickness, maxSplittableRatio){
-		this.maxSplittableRatio = maxSplittableRatio;
+	var Field = function(rectangle, fieldSplitter, configuration){
+		this.maxSplittableRatio = configuration.maxSplittableRatio;
 		this.neighbors = [];
 		this.rectangle = rectangle;
-		this.borderThickness = borderThickness;
-		this.relativeArea = relativeArea;
+		this.borderThickness = configuration.borderThickness;
+		this.relativeArea = rectangle.area / fieldSplitter.totalArea;
+		this.fieldSplitter = fieldSplitter;
 	};
 	Field.prototype.getDirectionDistribution = function(){
 		var result = Distribution.only(Direction.HORIZONTAL).scale(this.rectangle.verticalInterval.length)
@@ -52,11 +53,12 @@ var f = function(require){
 			border: rectangleSplit.border
 		};
 	};
-	Field.prototype.getColorDistribution = function(initialDistribution){
+	Field.prototype.getColorDistribution = function(){
+		var initialDistribution = Distribution.constant().scale(this.fieldSplitter.smallestRelativeArea * 10);
 		return initialDistribution.add(Distribution.only(Color.WHITE).scale(this.relativeArea));
 	};
-	Field.prototype.draw = function(context, colorDistribution, randomValueProvider){
-		var color = randomValueProvider.provideRandomColor(this, colorDistribution);
+	Field.prototype.draw = function(context, randomValueProvider){
+		var color = randomValueProvider.provideRandomColor(this);
 		this.rectangle.draw(context, color);
 	};
 	return Field;

@@ -16,7 +16,7 @@ var f = function(require){
 	FieldSplitter.prototype.createField = function(rectangle){
 		var relativeArea = rectangle.area / this.totalArea;
 		this.smallestRelativeArea = Math.min(this.smallestRelativeArea, relativeArea);
-		return new Field(rectangle, relativeArea, this.configuration.borderThickness, this.configuration.maxSplittableRatio);
+		return new Field(rectangle, this, this.configuration);
 	};
 	FieldSplitter.prototype.splitRandomField = function(randomValueProvider){
 		var self = this;
@@ -27,9 +27,8 @@ var f = function(require){
 		this.fields.splice(index, 1, split.fields[0], split.fields[1]);
 	};
 	FieldSplitter.prototype.drawFields = function(context, randomValueProvider){
-		var colorDistribution = Distribution.constant().scale(this.smallestRelativeArea * 10);
 		for(var i=0;i<this.fields.length;i++){
-			this.fields[i].draw(context, colorDistribution, randomValueProvider);
+			this.fields[i].draw(context, randomValueProvider);
 		}
 	};
 	FieldSplitter.prototype.drawBorders = function(context){
