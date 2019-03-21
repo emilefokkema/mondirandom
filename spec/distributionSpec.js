@@ -19,6 +19,25 @@ describe("A distribution", function(){
 				])
 		});
 
+		describe("but for one value multiplied", function(){
+			var newInstance, valueToMultiply = 1, ratio = 0.5;
+
+			beforeEach(function(){
+				newInstance = instance.multiplySingleValue(1, 0.5);
+			});
+
+			it("should give no weight to the excepted value", function(){
+				var values = [0, valueToMultiply, 2, 3];
+				var weightedValues = newInstance.getWeightedValues(values).values;
+				expect(weightedValues).toEqual([
+					{value:0,weight:1},
+					{value:valueToMultiply,weight:0.5},
+					{value:2,weight:1},
+					{value:3,weight:1}
+					])
+			});
+		});
+
 		describe("except a single value", function(){
 			var newInstance, valueToExcept = 1;
 

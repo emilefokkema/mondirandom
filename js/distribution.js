@@ -20,6 +20,14 @@ var f = function(require){
 	Distribution.prototype.getWeightedValues = function(values){
 		return new WeightedValueSet(values, this.getValueWeight);
 	};
+	Distribution.prototype.multiply = function(other){
+		var newGetValueWeight = (function(one, two){
+			return function(v){
+				return one(v) * two(v);
+			};
+		})(this.getValueWeight, other.getValueWeight);
+		return new Distribution(newGetValueWeight);
+	};
 	Distribution.prototype.add = function(other){
 		var newGetValueWeight = (function(one, two){
 			return function(v){
@@ -28,16 +36,17 @@ var f = function(require){
 		})(this.getValueWeight, other.getValueWeight);
 		return new Distribution(newGetValueWeight);
 	};
+	Distribution.prototype.multiplySingleValue = function(value, ratio){
+		return this.multiply(Distribution.not(value).add(Distribution.only(value).scale(ratio)));
+	};
 	Distribution.prototype.except = function(value){
-		var newGetValueWeight = (function(old){
-			return function(v){
-				return v == value ? 0 : old(v);
-			};
-		})(this.getValueWeight);
-		return new Distribution(newGetValueWeight);
+		return this.multiply(Distribution.not(value));
 	};
 	Distribution.only = function(singleValue){
 		return new Distribution(function(v){return v == singleValue ? 1 : 0;});
+	};
+	Distribution.not = function(singleValue){
+		return new Distribution(function(v){return v == singleValue ? 0 : 1;});
 	};
 	Distribution.constant = function(){
 		return new Distribution();
