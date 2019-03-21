@@ -53,12 +53,13 @@ var f = function(require){
 			border: rectangleSplit.border
 		};
 	};
-	Field.prototype.getColorDistribution = function(){
+	Field.prototype.getColorDistribution = function(fieldColoring){
 		var initialDistribution = Distribution.constant().scale(this.fieldSplitter.smallestRelativeArea * this.lowestColorDistributionFactor);
 		return initialDistribution.add(Distribution.only(Color.WHITE).scale(this.relativeArea));
 	};
-	Field.prototype.draw = function(context, randomValueProvider){
-		var color = randomValueProvider.provideRandomColor(this);
+	Field.prototype.draw = function(context, randomValueProvider, fieldColoring){
+		var color = randomValueProvider.provideRandomColor(this, fieldColoring);
+		fieldColoring.colorField(this, color);
 		this.rectangle.draw(context, color);
 	};
 	return Field;

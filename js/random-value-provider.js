@@ -15,8 +15,8 @@ var f = function(require){
 		var distribution = field.getDirectionDistribution();
 		return distribution.getWeightedValues(this.directions).getValueAtCutoffRatio(Math.random());
 	};
-	RandomValueProvider.prototype.provideRandomColor = function(field){
-		var colorDistribution = field.getColorDistribution();
+	RandomValueProvider.prototype.provideRandomColor = function(field, fieldColoring){
+		var colorDistribution = field.getColorDistribution(fieldColoring);
 		return colorDistribution.getWeightedValues(this.colors).getValueAtCutoffRatio(Math.random());
 	};
 	RandomValueProvider.prototype.provideRandomRatio = function(continuousDistribution){

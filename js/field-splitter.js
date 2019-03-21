@@ -1,5 +1,6 @@
 var f = function(require){
 	var Field = require("./field");
+	var FieldColoring = require("./field-coloring");
 	var Rectangle = require("./rectangle");
 	var Color = require("./color");
 	var Distribution = require("./distribution");
@@ -28,8 +29,9 @@ var f = function(require){
 		this.fields.splice(index, 1, split.fields[0], split.fields[1]);
 	};
 	FieldSplitter.prototype.drawFields = function(context, randomValueProvider){
+		var fieldColoring = new FieldColoring();
 		for(var i=0;i<this.fields.length;i++){
-			this.fields[i].draw(context, randomValueProvider);
+			this.fields[i].draw(context, randomValueProvider, fieldColoring);
 		}
 	};
 	FieldSplitter.prototype.drawBorders = function(context){
