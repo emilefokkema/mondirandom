@@ -21,12 +21,30 @@ describe("A FieldSplitter", function(){
 	};
 
 	beforeEach(function(){
-		instance = new FieldSplitter(10, 10, {borderThickness: 1});
+		instance = new FieldSplitter(10, 10, {
+			borderThickness: 1,
+			lowestFieldDistributionFactor: 1
+		});
 		initialField = instance.fields[0];
 	});
 
 	it("should be there", function(){
 		expect(instance).toBeTruthy();
+	});
+
+	describe("when it has a big field and a small field", function(){
+		var bigField, smallField;
+
+		beforeEach(function(){
+			splitFieldInDirection(instance, instance.fields[0], Direction.VERTICAL, 0.1);
+			smallField = instance.fields.find(f => f.rectangle.horizontalInterval.from == 0);
+			bigField = instance.fields.find(f => f.rectangle.horizontalInterval.from == 1);
+		});
+
+		it("should prefer to split the big field", function(){
+			var fieldDistribution = instance.getFieldDistribution();
+			expect(fieldDistribution).toPreferTo(smallField, bigField);
+		});
 	});
 
 	describe("when it splits two fields", function(){

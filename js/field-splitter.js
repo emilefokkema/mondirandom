@@ -10,8 +10,9 @@ var f = function(require){
 		this.totalArea = width * height;
 		this.smallestRelativeArea = 1;
 		this.fields = [this.createField(Rectangle.create(0, 0, width, height))];
-	};	FieldSplitter.prototype.getFieldDistribution = function(){
-		return new Distribution(function(f){return f.relativeArea;}).add(Distribution.constant().scale(0.05));
+	};
+	FieldSplitter.prototype.getFieldDistribution = function(){
+		return new Distribution(function(f){return f.relativeArea;}).add(Distribution.constant().scale(this.smallestRelativeArea * this.configuration.lowestFieldDistributionFactor));
 	};
 	FieldSplitter.prototype.createField = function(rectangle){
 		var relativeArea = rectangle.area / this.totalArea;

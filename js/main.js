@@ -11,7 +11,8 @@ var f = function(require){
 		var configuration = {
 			borderThickness: 5,
 			maxSplittableRatio: 10,
-			lowestColorDistributionFactor: 10
+			lowestColorDistributionFactor: 10,
+			lowestFieldDistributionFactor: 10
 		};
 		var splitter = new FieldSplitter(width, height, configuration);
 		for(var i=0;i<40;i++){
