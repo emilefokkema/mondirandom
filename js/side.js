@@ -5,6 +5,12 @@ var f = function(require){
 		this.direction = direction;
 		
 	};
+	Side.prototype.overlapsWith = function(other){
+		if(other.direction != this.direction || other.position != this.position){
+			return false;
+		}
+		return this.interval.overlapsWith(other.interval);
+	};
 	Side.prototype.getOverlapWith = function(other){
 		if(other.direction != this.direction || other.position != this.position){
 			return null;

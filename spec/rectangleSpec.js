@@ -24,6 +24,10 @@ describe("A rectangle", function(){
 		beforeEach(function(){
 			otherOne = Rectangle.create(2, 0, 1, 1);
 		});
+
+		it("should border one another", function(){
+			expect(instance.borders(otherOne)).toBe(true);
+		});
 		
 		it("should have a common side", function(){
 			var commonSides = instance.getCommonSidesWith(otherOne);
@@ -40,6 +44,10 @@ describe("A rectangle", function(){
 		
 		beforeEach(function(){
 			otherOne = Rectangle.create(2, 0.5, 1, 1);
+		});
+
+		it("should border one another", function(){
+			expect(instance.borders(otherOne)).toBe(true);
 		});
 		
 		it("should have a common side", function(){
@@ -58,6 +66,10 @@ describe("A rectangle", function(){
 		beforeEach(function(){
 			otherOne = Rectangle.create(3, 0, 1, 1);
 		});
+
+		it("should not border one another", function(){
+			expect(instance.borders(otherOne)).toBe(false);
+		});
 		
 		it("should not have a common side", function(){
 			var commonSides = instance.getCommonSidesWith(otherOne);
@@ -70,6 +82,11 @@ describe("A rectangle", function(){
 		
 		beforeEach(function(){
 			otherOne = Rectangle.create(0.5, 0.5, 1, 1);
+		});
+
+		
+		it("should not border one another", function(){
+			expect(instance.borders(otherOne)).toBe(false);
 		});
 		
 		it("should not have a common side", function(){

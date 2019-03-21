@@ -18,6 +18,9 @@ var f = function(require){
 	Interval.prototype.contains = function(point){
 		return point >= this.from && point <= this.to;
 	};
+	Interval.prototype.overlapsWith = function(other){
+		return this.to > other.from && this.from < other.to;
+	};
 	Interval.prototype.getOverlapWith = function(other){
 		if(this.to <= other.from || this.from >= other.to){
 			return null;

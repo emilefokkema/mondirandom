@@ -26,8 +26,7 @@ var f = function(require){
 	Field.prototype.findNeighbors = function(candidates){
 		for(var i=0;i<candidates.length;i++){
 			var candidate = candidates[i];
-			var commonSides = this.rectangle.getCommonSidesWith(candidate.rectangle);
-			if(commonSides.length > 0){
+			if(this.rectangle.borders(candidate.rectangle)){
 				this.neighbors.push(candidate);
 			}
 		}

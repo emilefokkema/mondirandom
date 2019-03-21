@@ -21,6 +21,10 @@ describe("an side", function(){
 			var interval = new Interval(2, 4, new TestRandomValueProvider());
 			overlappingOne = new Side(interval, 0, Direction.HORIZONTAL);
 		});
+
+		it("should overlap", function(){
+			expect(instance.overlapsWith(overlappingOne)).toBe(true);
+		});
 		
 		it("should have an overlapping side", function(){
 			var overlappingSide = instance.getOverlapWith(overlappingOne);
@@ -41,6 +45,10 @@ describe("an side", function(){
 			var interval = new Interval(-1, 1, new TestRandomValueProvider());
 			oneWithDifferentDirection = new Side(interval, 2, Direction.VERTICAL);
 		});
+
+		it("should not overlap", function(){
+			expect(instance.overlapsWith(oneWithDifferentDirection)).toBe(false);
+		});
 		
 		it("should not have an overlapping side", function(){
 			var overlappingSide = instance.getOverlapWith(oneWithDifferentDirection);
@@ -53,6 +61,10 @@ describe("an side", function(){
 		beforeEach(function(){
 			var interval = new Interval(1, 3, new TestRandomValueProvider());
 			oneWithDifferentPosition = new Side(interval, 1, Direction.HORIZONTAL);
+		});
+
+		it("should not overlap", function(){
+			expect(instance.overlapsWith(oneWithDifferentPosition)).toBe(false);
 		});
 		
 		it("should not have an overlapping side", function(){

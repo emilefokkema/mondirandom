@@ -35,6 +35,18 @@ Rectangle.prototype.withHorizontalInterval = function(horizontalInterval){
 			border: this.withHorizontalInterval(Interval.around(split.splitPoint, borderThickness / 2))
 		};
 	};
+	Rectangle.prototype.borders = function(other){
+		for(var i = 0; i < 4; i++){
+			var thisSide = this.sides[i];
+			for(var j = 0; j < 4; j++){
+				var otherSide = other.sides[j];
+				if(thisSide.overlapsWith(otherSide)){
+					return true;
+				}
+			}
+		}
+		return false;
+	};
 	Rectangle.prototype.getCommonSidesWith = function(other){
 		var result = [];
 		for(var i = 0; i < 4; i++){
