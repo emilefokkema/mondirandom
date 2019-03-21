@@ -11,6 +11,7 @@ var f = function(require){
 		this.borderThickness = configuration.borderThickness;
 		this.relativeArea = rectangle.area / fieldSplitter.totalArea;
 		this.fieldSplitter = fieldSplitter;
+		this.configuration = configuration;
 	};
 	Field.prototype.getDirectionDistribution = function(){
 		var result = Distribution.only(Direction.HORIZONTAL).scale(this.rectangle.verticalInterval.length)
@@ -53,9 +54,35 @@ var f = function(require){
 			border: rectangleSplit.border
 		};
 	};
+	Field.prototype.getBorderOccupancy = function(neighbor){
+		return this.rectangle
+				.getCommonSidesWith(neighbor.rectangle)
+				.reduce(function(total, newSide){return total + newSide.interval.length;}, 0);
+	};
+	Field.prototype.getNeighborColoringFactor = function(relativeBorderOccupancy, neighborColor){
+		var limitOccupancy = this.configuration.neighborColorExclusionLimit;
+		if(limitOccupancy == Infinity){
+			return 1;
+		}
+		if(limitOccupancy == 0){
+			return 0;
+		}
+		return 1 - relativeBorderOccupancy / limitOccupancy;
+	};
 	Field.prototype.getColorDistribution = function(fieldColoring){
-		var initialDistribution = Distribution.constant().scale(this.fieldSplitter.smallestRelativeArea * this.lowestColorDistributionFactor);
-		return initialDistribution.add(Distribution.only(Color.WHITE).scale(this.relativeArea));
+		var result = Distribution.constant()
+			.scale(this.fieldSplitter.smallestRelativeArea * this.lowestColorDistributionFactor)
+			.add(Distribution.only(Color.WHITE).scale(this.relativeArea));
+		for(var i=0;i<this.neighbors.length;i++){
+			var neighbor = this.neighbors[i];
+			var neighborColoring = fieldColoring.getFieldColoring(neighbor);
+			if(!neighborColoring || neighborColoring.color == Color.WHITE){
+				continue;
+			}
+			var relativeBorderOccupancy = this.getBorderOccupancy(neighbor) / this.rectangle.circumference;
+			result = result.multiplySingleValue(neighborColoring.color, this.getNeighborColoringFactor(relativeBorderOccupancy, neighborColoring.color));
+		}
+		return result;
 	};
 	Field.prototype.draw = function(context, randomValueProvider, fieldColoring){
 		var color = randomValueProvider.provideRandomColor(this, fieldColoring);

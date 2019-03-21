@@ -1,6 +1,7 @@
 describe("A field", function(){
 	var FieldSplitter = require("../js/field-splitter.js");
 	var Color = require("../js/color.js");
+	var FieldColoring = require("../js/field-coloring.js");
 	var splitFieldInDirection = require("./split-field-in-direction.js");
 	var TestRandomValueProvider = require("./test-random-value-provider.js");
 	var Direction = require("../js/direction.js");
@@ -8,7 +9,8 @@ describe("A field", function(){
 		maxSplittableRatio = 10,
 		configuration = {
 			maxSplittableRatio: maxSplittableRatio,
-			lowestColorDistributionFactor: 1
+			lowestColorDistributionFactor: 1,
+			neighborColorExclusionLimit: 0
 		};
 
 	describe("that exceeds the max ratio vertically", function(){
@@ -25,6 +27,24 @@ describe("A field", function(){
 		});
 	});
 
+	describe("that has a neighbor that is colored red", function(){
+		var neighbor;
+
+		beforeEach(function(){
+			var splitter = new FieldSplitter(10, 10, configuration);
+			splitFieldInDirection(splitter, splitter.fields[0], Direction.VERTICAL, 0.5);
+			instance = splitter.fields[0];
+			neighbor = splitter.fields[1];
+		});
+
+		it("should exclude red from its color distribution", function(){
+			var fieldColoring = new FieldColoring();
+			fieldColoring.colorField(neighbor, Color.RED);
+			var colorDistribution = instance.getColorDistribution(fieldColoring);
+			expect(colorDistribution).not.toGiveWeightTo(Color.RED);
+		});
+	});
+
 	describe("that is relatively big", function(){
 
 		beforeEach(function(){
@@ -36,7 +56,8 @@ describe("A field", function(){
 		});
 
 		it("should prefer white over other colors", function(){
-			var colorDistribution = instance.getColorDistribution();
+			var fieldColoring = new FieldColoring();
+			var colorDistribution = instance.getColorDistribution(fieldColoring);
 			expect(colorDistribution).toPreferTo(Color.RED, Color.WHITE);
 			expect(colorDistribution).toPreferTo(Color.BLUE, Color.WHITE);
 			expect(colorDistribution).toPreferTo(Color.YELLOW, Color.WHITE);
