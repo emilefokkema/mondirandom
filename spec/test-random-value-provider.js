@@ -10,7 +10,7 @@ TestRandomValueProvider.prototype.provideRandomField = function(fieldSplitter){
 TestRandomValueProvider.prototype.provideRandomDirection = function(field){
 	return this.randomDirection;
 };
-TestRandomValueProvider.prototype.provideRandomColor = function(field){
+TestRandomValueProvider.prototype.provideRandomColor = function(field, fieldColoring){
 	for(var i=0;i<this.fieldColors.length;i++){
 		var fieldColor = this.fieldColors[i];
 		if(fieldColor.field == field){

@@ -12,7 +12,14 @@ var f = function(require){
 			borderThickness: 5,
 			maxSplittableRatio: 10,
 			lowestColorDistributionFactor: 10,
-			lowestFieldDistributionFactor: 10
+			lowestFieldDistributionFactor: 10,
+			neighborColorExclusionLimit: {
+				black:0,
+				red:0.1,
+				yellow:0.1,
+				blue:0.1,
+				white:Infinity
+			}
 		};
 		var splitter = new FieldSplitter(width, height, configuration);
 		for(var i=0;i<40;i++){

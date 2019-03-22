@@ -8,10 +8,11 @@ var f = function(require){
 		this.verticalInterval = verticalInterval;
 		this.area = horizontalInterval.length * verticalInterval.length;
 		var top = new Side(horizontalInterval, verticalInterval.from, Direction.HORIZONTAL);
-			var bottom = new Side(horizontalInterval, verticalInterval.to, Direction.HORIZONTAL);
-	var left = new Side(verticalInterval, horizontalInterval.from, Direction.VERTICAL);
-	var right = new Side(verticalInterval, horizontalInterval.to, Direction.VERTICAL);
-	this.sides = [top, bottom, left, right];
+		var bottom = new Side(horizontalInterval, verticalInterval.to, Direction.HORIZONTAL);
+		var left = new Side(verticalInterval, horizontalInterval.from, Direction.VERTICAL);
+		var right = new Side(verticalInterval, horizontalInterval.to, Direction.VERTICAL);
+		this.sides = [top, bottom, left, right];
+		this.circumference = 2 * (horizontalInterval.length + verticalInterval.length);
 	};
 Rectangle.prototype.withHorizontalInterval = function(horizontalInterval){
 		return new Rectangle(horizontalInterval, this.verticalInterval);
