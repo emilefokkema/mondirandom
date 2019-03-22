@@ -10,7 +10,13 @@ describe("A field", function(){
 		configuration = {
 			maxSplittableRatio: maxSplittableRatio,
 			lowestColorDistributionFactor: 1,
-			neighborColorExclusionLimit: 0
+			neighborColorExclusionLimit: {
+				black:0,
+				red:0,
+				yellow:0.25,
+				blue:0,
+				white:Infinity
+			}
 		};
 
 	describe("that exceeds the max ratio vertically", function(){
@@ -31,7 +37,7 @@ describe("A field", function(){
 		var neighbor;
 
 		beforeEach(function(){
-			var splitter = new FieldSplitter(10, 10, configuration);
+			var splitter = new FieldSplitter(20, 10, configuration);
 			splitFieldInDirection(splitter, splitter.fields[0], Direction.VERTICAL, 0.5);
 			instance = splitter.fields[0];
 			neighbor = splitter.fields[1];
@@ -42,6 +48,60 @@ describe("A field", function(){
 			fieldColoring.colorField(neighbor, Color.RED);
 			var colorDistribution = instance.getColorDistribution(fieldColoring);
 			expect(colorDistribution).not.toGiveWeightTo(Color.RED);
+		});
+	});
+
+	describe("that has a neighbor that is colored white and occupies a lot of border", function(){
+		var neighbor;
+
+		beforeEach(function(){
+			var splitter = new FieldSplitter(1, 20, configuration);
+			splitFieldInDirection(splitter, splitter.fields[0], Direction.VERTICAL, 0.5);
+			instance = splitter.fields[0];
+			neighbor = splitter.fields[1];
+		});
+
+		it("should not exclude white from its color distribution", function(){
+			var fieldColoring = new FieldColoring();
+			fieldColoring.colorField(neighbor, Color.WHITE);
+			var colorDistribution = instance.getColorDistribution(fieldColoring);
+			expect(colorDistribution).toGiveWeightTo(Color.WHITE);
+		});
+	});
+
+	describe("that has a neighbor that is colored yellow but doesn't occupy too much border", function(){
+		var neighbor;
+
+		beforeEach(function(){
+			var splitter = new FieldSplitter(40, 10, configuration);
+			splitFieldInDirection(splitter, splitter.fields[0], Direction.VERTICAL, 0.5);
+			instance = splitter.fields[0];
+			neighbor = splitter.fields[1];
+		});
+
+		it("should not exclude yellow from its color distribution", function(){
+			var fieldColoring = new FieldColoring();
+			fieldColoring.colorField(neighbor, Color.YELLOW);
+			var colorDistribution = instance.getColorDistribution(fieldColoring);
+			expect(colorDistribution).toGiveWeightTo(Color.YELLOW);
+		});
+	});
+
+	describe("that has a neighbor that is colored yellow but occupies too much border", function(){
+		var neighbor;
+
+		beforeEach(function(){
+			var splitter = new FieldSplitter(10, 10, configuration);
+			splitFieldInDirection(splitter, splitter.fields[0], Direction.VERTICAL, 0.5);
+			instance = splitter.fields[0];
+			neighbor = splitter.fields[1];
+		});
+
+		it("should exclude yellow from its color distribution", function(){
+			var fieldColoring = new FieldColoring();
+			fieldColoring.colorField(neighbor, Color.YELLOW);
+			var colorDistribution = instance.getColorDistribution(fieldColoring);
+			expect(colorDistribution).not.toGiveWeightTo(Color.YELLOW);
 		});
 	});
 

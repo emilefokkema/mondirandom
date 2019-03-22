@@ -59,15 +59,25 @@ var f = function(require){
 				.getCommonSidesWith(neighbor.rectangle)
 				.reduce(function(total, newSide){return total + newSide.interval.length;}, 0);
 	};
+	Field.prototype.getLimitOccupancy = function(neighborColor){
+		var limit = this.configuration.neighborColorExclusionLimit;
+		switch(neighborColor){
+			case Color.WHITE: return limit.white;
+			case Color.BLACK: return limit.black;
+			case Color.RED: return limit.red;
+			case Color.BLUE: return limit.blue;
+			case Color.YELLOW: return limit.yellow;
+		}
+	};
 	Field.prototype.getNeighborColoringFactor = function(relativeBorderOccupancy, neighborColor){
-		var limitOccupancy = this.configuration.neighborColorExclusionLimit;
+		var limitOccupancy = this.getLimitOccupancy(neighborColor);
 		if(limitOccupancy == Infinity){
 			return 1;
 		}
 		if(limitOccupancy == 0){
 			return 0;
 		}
-		return 1 - relativeBorderOccupancy / limitOccupancy;
+		return Math.max(1 - relativeBorderOccupancy / limitOccupancy, 0);
 	};
 	Field.prototype.getColorDistribution = function(fieldColoring){
 		var result = Distribution.constant()
@@ -76,11 +86,12 @@ var f = function(require){
 		for(var i=0;i<this.neighbors.length;i++){
 			var neighbor = this.neighbors[i];
 			var neighborColoring = fieldColoring.getFieldColoring(neighbor);
-			if(!neighborColoring || neighborColoring.color == Color.WHITE){
+			if(!neighborColoring){
 				continue;
 			}
 			var relativeBorderOccupancy = this.getBorderOccupancy(neighbor) / this.rectangle.circumference;
-			result = result.multiplySingleValue(neighborColoring.color, this.getNeighborColoringFactor(relativeBorderOccupancy, neighborColoring.color));
+			var factor = this.getNeighborColoringFactor(relativeBorderOccupancy, neighborColoring.color);
+			result = result.multiplySingleValue(neighborColoring.color, factor);
 		}
 		return result;
 	};
