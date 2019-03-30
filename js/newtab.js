@@ -6,7 +6,7 @@ var f = function(require){
 	var draw = function(width, height, canvasElement){
 		var canvas = new CanvasWithSize(canvasElement, width, height);
 		var instruction = Instruction.createForCanvas(canvas, configProvider.getConfig());
-		console.log("?i="+instruction.toString());
+		console.log("https://emilefokkema.github.io/mondirandom/?i="+instruction.toString());
 	};
 
 	draw(window.innerWidth, window.innerHeight, document.getElementById("canvas"));
