@@ -3,14 +3,18 @@ var TestRandomValueProvider = function(){
 	this.randomDirection = undefined;
 	this.fieldColors = [];
 	this.randomRatio = undefined;
+	this.randomSplitPoint = undefined;
 };
-TestRandomValueProvider.prototype.provideRandomField = function(fieldSplitter){
+TestRandomValueProvider.prototype.provideField = function(fieldSplitter){
 	return this.randomField;
 };
-TestRandomValueProvider.prototype.provideRandomDirection = function(field){
+TestRandomValueProvider.prototype.provideDirection = function(field){
 	return this.randomDirection;
 };
-TestRandomValueProvider.prototype.provideRandomColor = function(field, fieldColoring){
+TestRandomValueProvider.prototype.provideSplitPoint = function(field, direction){
+	return this.randomSplitPoint;
+};
+TestRandomValueProvider.prototype.provideColor = function(field, fieldColoring){
 	for(var i=0;i<this.fieldColors.length;i++){
 		var fieldColor = this.fieldColors[i];
 		if(fieldColor.field == field){
@@ -18,9 +22,6 @@ TestRandomValueProvider.prototype.provideRandomColor = function(field, fieldColo
 		}
 	}
 	throw 'No color provided for field';
-};
-TestRandomValueProvider.prototype.provideRandomRatio = function(){
-	return this.randomRatio;
 };
 
 module.exports = TestRandomValueProvider;

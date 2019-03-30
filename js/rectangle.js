@@ -20,20 +20,18 @@ Rectangle.prototype.withHorizontalInterval = function(horizontalInterval){
 	Rectangle.prototype.withVerticalInterval = function(verticalInterval){
 		return new Rectangle(this.horizontalInterval, verticalInterval);
 	};
-	Rectangle.prototype.splitHorizontal = function(borderThickness, randomValueProvider){
-		var split = this.verticalInterval.split(randomValueProvider);
+	Rectangle.prototype.splitHorizontal = function(borderThickness, splitPoint){
+		var split = this.verticalInterval.split(splitPoint);
 		return {
-			splitPoint: split.splitPoint,
 			rectangles: [this.withVerticalInterval(split.intervals[0]), this.withVerticalInterval(split.intervals[1])],
-			border: this.withVerticalInterval(Interval.around(split.splitPoint, borderThickness / 2))
+			border: this.withVerticalInterval(Interval.around(splitPoint, borderThickness / 2))
 		};
 	};
-	Rectangle.prototype.splitVertical = function(borderThickness, randomValueProvider){
-		var split = this.horizontalInterval.split(randomValueProvider);
+	Rectangle.prototype.splitVertical = function(borderThickness, splitPoint){
+		var split = this.horizontalInterval.split(splitPoint);
 		return {
-			splitPoint: split.splitPoint,
 			rectangles: [this.withHorizontalInterval(split.intervals[0]), this.withHorizontalInterval(split.intervals[1])],
-			border: this.withHorizontalInterval(Interval.around(split.splitPoint, borderThickness / 2))
+			border: this.withHorizontalInterval(Interval.around(splitPoint, borderThickness / 2))
 		};
 	};
 	Rectangle.prototype.borders = function(other){

@@ -4,25 +4,29 @@ var f = function(require){
 	var Distribution = require("./distribution");
 
 	var Field = function(rectangle, fieldSplitter, configuration){
-		this.maxSplittableRatio = configuration.maxSplittableRatio;
-		this.lowestColorDistributionFactor = configuration.lowestColorDistributionFactor;
 		this.neighbors = [];
 		this.rectangle = rectangle;
 		this.borderThickness = configuration.borderThickness;
 		this.relativeArea = rectangle.area / fieldSplitter.totalArea;
 		this.fieldSplitter = fieldSplitter;
-		this.configuration = configuration;
 	};
-	Field.prototype.getDirectionDistribution = function(){
+	Field.prototype.getDirectionDistribution = function(randomValueProviderConfig){
+		var maxSplittableRatio = randomValueProviderConfig.maxSplittableRatio;
 		var result = Distribution.only(Direction.HORIZONTAL).scale(this.rectangle.verticalInterval.length)
 			.add(Distribution.only(Direction.VERTICAL).scale(this.rectangle.horizontalInterval.length));
-		if(this.rectangle.verticalInterval.length > this.maxSplittableRatio * this.rectangle.horizontalInterval.length){
+		if(this.rectangle.verticalInterval.length > maxSplittableRatio * this.rectangle.horizontalInterval.length){
 			result = result.except(Direction.VERTICAL);
 		}
-		if(this.rectangle.horizontalInterval.length > this.maxSplittableRatio * this.rectangle.verticalInterval.length){
+		if(this.rectangle.horizontalInterval.length > maxSplittableRatio * this.rectangle.verticalInterval.length){
 			result = result.except(Direction.HORIZONTAL);
 		}
 		return result;
+	};
+	Field.prototype.getSplitPointDistribution = function(direction, randomValueProviderConfig){
+		var interval = direction == Direction.VERTICAL ? this.rectangle.horizontalInterval : this.rectangle.verticalInterval;
+		var from = interval.from + 0.1 * interval.length;
+		var to = interval.from + 0.9 * interval.length;
+		return Distribution.continuous(from, to);
 	};
 	Field.prototype.findNeighbors = function(candidates){
 		for(var i=0;i<candidates.length;i++){
@@ -37,12 +41,13 @@ var f = function(require){
 		this.neighbors.splice(oldNeighborIndex, 1);
 		this.findNeighbors([newField1, newField2]);
 	};
-	Field.prototype.split = function(createField, randomValueProvider){
-		var direction = randomValueProvider.provideRandomDirection(this);
+	Field.prototype.split = function(createField, valueProvider){
+		var direction = valueProvider.provideDirection(this);
+		var splitPoint = valueProvider.provideSplitPoint(this, direction);
 		var self = this;
 		var rectangleSplit = direction == Direction.VERTICAL ? 
-			this.rectangle.splitVertical(this.borderThickness, randomValueProvider) : 
-			this.rectangle.splitHorizontal(this.borderThickness, randomValueProvider);
+			this.rectangle.splitVertical(this.borderThickness, splitPoint) : 
+			this.rectangle.splitHorizontal(this.borderThickness, splitPoint);
 		var newFields = rectangleSplit.rectangles.map(createField);
 		newFields[0].findNeighbors(this.neighbors.concat([newFields[1]]));
 		newFields[1].findNeighbors(this.neighbors.concat([newFields[0]]));
@@ -59,18 +64,17 @@ var f = function(require){
 				.getCommonSidesWith(neighbor.rectangle)
 				.reduce(function(total, newSide){return total + newSide.interval.length;}, 0);
 	};
-	Field.prototype.getLimitOccupancy = function(neighborColor){
-		var limit = this.configuration.neighborColorExclusionLimit;
+	Field.prototype.getLimitOccupancy = function(neighborColor, neighborColorExclusionLimit){
 		switch(neighborColor){
-			case Color.WHITE: return limit.white;
-			case Color.BLACK: return limit.black;
-			case Color.RED: return limit.red;
-			case Color.BLUE: return limit.blue;
-			case Color.YELLOW: return limit.yellow;
+			case Color.WHITE: return neighborColorExclusionLimit.white;
+			case Color.BLACK: return neighborColorExclusionLimit.black;
+			case Color.RED: return neighborColorExclusionLimit.red;
+			case Color.BLUE: return neighborColorExclusionLimit.blue;
+			case Color.YELLOW: return neighborColorExclusionLimit.yellow;
 		}
 	};
-	Field.prototype.getNeighborColoringFactor = function(relativeBorderOccupancy, neighborColor){
-		var limitOccupancy = this.getLimitOccupancy(neighborColor);
+	Field.prototype.getNeighborColoringFactor = function(relativeBorderOccupancy, neighborColor, neighborColorExclusionLimit){
+		var limitOccupancy = this.getLimitOccupancy(neighborColor, neighborColorExclusionLimit);
 		if(limitOccupancy == Infinity){
 			return 1;
 		}
@@ -79,9 +83,10 @@ var f = function(require){
 		}
 		return Math.max(1 - relativeBorderOccupancy / limitOccupancy, 0);
 	};
-	Field.prototype.getColorDistribution = function(fieldColoring){
+	Field.prototype.getColorDistribution = function(fieldColoring, randomValueProviderConfig){
+		var lowestColorDistributionFactor = randomValueProviderConfig.lowestColorDistributionFactor;
 		var result = Distribution.constant()
-			.scale(this.fieldSplitter.smallestRelativeArea * this.lowestColorDistributionFactor)
+			.scale(this.fieldSplitter.smallestRelativeArea * lowestColorDistributionFactor)
 			.add(Distribution.only(Color.WHITE).scale(this.relativeArea));
 		for(var i=0;i<this.neighbors.length;i++){
 			var neighbor = this.neighbors[i];
@@ -90,13 +95,13 @@ var f = function(require){
 				continue;
 			}
 			var relativeBorderOccupancy = this.getBorderOccupancy(neighbor) / this.rectangle.circumference;
-			var factor = this.getNeighborColoringFactor(relativeBorderOccupancy, neighborColoring.color);
+			var factor = this.getNeighborColoringFactor(relativeBorderOccupancy, neighborColoring.color, randomValueProviderConfig.neighborColorExclusionLimit);
 			result = result.multiplySingleValue(neighborColoring.color, factor);
 		}
 		return result;
 	};
-	Field.prototype.draw = function(context, randomValueProvider, fieldColoring){
-		var color = randomValueProvider.provideRandomColor(this, fieldColoring);
+	Field.prototype.draw = function(context, valueProvider, fieldColoring){
+		var color = valueProvider.provideColor(this, fieldColoring);
 		fieldColoring.colorField(this, color);
 		this.rectangle.draw(context, color);
 	};

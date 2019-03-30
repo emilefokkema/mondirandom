@@ -7,12 +7,9 @@ var f = function(require){
 		this.length = this.to - this.from;
 		this.splitPointDistribution = Distribution.continuous(0.1, 0.9);
 	};
-	Interval.prototype.split = function(randomValueProvider){
-		var ratio = randomValueProvider.provideRandomRatio(this.splitPointDistribution);
-		var newPoint = this.from + ratio * this.length;
+	Interval.prototype.split = function(splitPoint){
 		return {
-			splitPoint:newPoint,
-			intervals: [new Interval(this.from, newPoint), new Interval(newPoint, this.to)]
+			intervals: [new Interval(this.from, splitPoint), new Interval(splitPoint, this.to)]
 		};
 	};
 	Interval.prototype.contains = function(point){
