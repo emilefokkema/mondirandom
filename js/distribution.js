@@ -5,6 +5,9 @@ var f = function(require){
 		this.from = from;
 		this.to = to;
 	};
+	ContinuousDistribution.prototype.getValueAtCutoffRatio = function(ratio){
+		return this.from + (this.to - this.from) * ratio;
+	};
 
 	var Distribution = function(getValueWeight){
 		this.getValueWeight = getValueWeight || function(){return 1;};
