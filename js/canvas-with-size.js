@@ -8,9 +8,8 @@ var f = function(require){
 		this.context = canvasElement.getContext("2d");
 	};
 	CanvasWithSize.prototype.fitDrawingOfSize = function(width, height){
-		var horizontalScaling = this.width / width;
-		var verticalScaling = this.height / height;
-		this.context.setTransform(horizontalScaling, 0, 0, verticalScaling, 0, 0);
+		var scaling = Math.min(this.width / width, this.height / height);
+		this.context.setTransform(scaling, 0, 0, scaling, 0, 0);
 	};
 
 	return CanvasWithSize;
