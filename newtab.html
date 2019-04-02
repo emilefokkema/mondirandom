@@ -76,162 +76,140 @@
             </div>
         </div>
     </template>
-    <div class="main-wrapper">
+    <template id="share-template">
+        <div class="share">
+            <a class="floating-button floating-button--transparent share__deeplink__button" data-tooltip="left" data-title="Get link">
+                <svg class="icon icon-share " xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="#share"></use>
+                </svg>
+                <svg class="icon icon-link state-active" xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="#link"></use>
+                </svg>
+            </a>
+            <div class="share__links">
+                <a class="floating-button floating-button--small share__link share__link--twitter" data-type="share" data-tooltip="left" data-title="Tweet" target="_blank" href="#" v-on:click="shareTwitter">
+                    <svg class="icon icon-twitter " xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="#twitter"></use>
+                    </svg>
+                </a>
+                <a class="floating-button floating-button--small share__link share__link--facebook" data-type="share" data-tooltip="left" data-title="Like" target="_blank" href="#" v-on:click="shareFacebook">
+                    <svg class="icon icon-facebook " xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="#facebook"></use>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </template>
+    <div class="main-wrapper" id="main">
         <div class="background">
             <div class="background__image"><canvas id="main_canvas"/></div>
         </div>
         <div class="content">
             <span class="content__arrow" title="Show History"><div class="content__arrow__hint"><span>Recent Imagery</span></div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 48 48">
-            <path d="M14.83 16.42L24 25.59l9.17-9.17L36 19.25l-12 12-12-12z" />
-        </svg>
-        </span>
-        <div class="content__attribution"><img class="content__attribution__logo" src="images/google-earth-logo.png" alt="Google">
-            <div class="content__attribution__text"></div>
-        </div>
-        <a class="content__location" id="globe" data-type="link" href="#" title="" target="_blank">
-            <div class="content__location__region"></div>
-            <div class="content__location__country"></div>
-            <div class="content__location__globe">
-                <div class="content__location__globe__pointer content__location__globe__pointer--hidden"></div>
-            </div>
-        </a>
-        <div class="teaser" id="new-earth-teaser-new-earth">
-            <div class="teaser__content">
-                <div class="teaser__header"><img class="logo" src="images/new-earth/google-earth-logo.png"></div>
-                <p class="teaser__content__text">Explore every city, country and canyon with the new Google Earth. Find a different perspective of our planet with immersive 3D, interactive stories from BBC Earth, PBS and NASA.</p>
-                <div class="teaser__content__previews"><img src="images/new-earth/new-earth-hero.jpg"></div>
-                <div class="teaser__content__actions"><a class="mdl-button teaser__go-to" title="Gain a New Perspective" href="https://earth.google.com/web/">Visit the New Google Earth</a>
-                    <button class="mdl-button hide-without-js teaser__dismiss" type="button" title="Dismiss">Dismiss</button>
-                </div>
-            </div>
-            <div class="teaser__collapsed"><img class="icon" src="images/new-earth/new-earth-logo.png">
-                <div class="teaser__collapsed__titles-wrapper">
-                    <h2 class="teaser__collapsed__title">Gain a New Perspective</h2>
-                    <h3 class="teaser__collapsed__subtitle">Try the new Google Earth.</h3></div>
-            </div>
-        </div>
-    </div>
-    <div class="menu menu--closed">
-        <a class="menu__toggle" href="#" title="Menu">
-            <svg class="icon icon-menu " xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="#menu"></use>
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 48 48">
+                <path d="M14.83 16.42L24 25.59l9.17-9.17L36 19.25l-12 12-12-12z" />
             </svg>
-        </a>
-        <div class="menu__content">
-            <a class="menu__item chrome-only" href="chrome://apps/">
-                <svg class="icon icon-apps " xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="#apps"></use>
-                </svg><span>Show Apps</span></a>
-            <a class="menu__item chrome-only" href="chrome-search://local-ntp/local-ntp.html">
-                <svg class="icon icon-tab " xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="#tab"></use>
-                </svg><span>Open Default Tab</span></a>
-            <a class="menu__item menu__item--maps" data-type="link" href="#" title="" target="_blank">
-                <svg class="icon icon-earth " xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="#earth"></use>
-                </svg><span></span></a>
-            <a class="menu__item menu__item--download" href="#" target="_blank" data-type="link">
-                <svg class="icon icon-download " xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="#download"></use>
-                </svg><span>Download Wallpaper</span></a>
-            <a class="menu__item menu__item--gallery" href="https://g.co/ev" target="_blank" data-type="link">
-                <svg class="icon icon-photo-library " xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="#photo-library"></use>
-                </svg><span>Visit Web Gallery</span></a>
+            </span>
         </div>
-    </div>
-    <div class="share">
-        <a class="floating-button floating-button--transparent share__deeplink__button" data-tooltip="left" data-title="Get link">
-            <svg class="icon icon-share " xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="#share"></use>
-            </svg>
-            <svg class="icon icon-link state-active" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="#link"></use>
-            </svg>
-        </a>
-        <div class="share__links">
-            <a class="floating-button floating-button--small share__link share__link--twitter" data-type="share" data-tooltip="left" data-title="Tweet" target="_blank" href="https://twitter.com/intent/tweet?text=Enjoy%20this%20Earth%20View%3A%20&amp;url=#{shareUrl}">
-                <svg class="icon icon-twitter " xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="#twitter"></use>
+        <div class="menu menu--closed">
+            <a class="menu__toggle" href="#" title="Menu">
+                <svg class="icon icon-menu " xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="#menu"></use>
                 </svg>
             </a>
-            <a class="floating-button floating-button--small share__link share__link--facebook" data-type="share" data-tooltip="left" data-title="Like" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=#{shareUrl}">
-                <svg class="icon icon-facebook " xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="#facebook"></use>
-                </svg>
-            </a>
+            <div class="menu__content">
+                <a class="menu__item chrome-only" href="chrome://apps/">
+                    <svg class="icon icon-apps " xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="#apps"></use>
+                    </svg><span>Show Apps</span></a>
+                <a class="menu__item chrome-only" href="chrome-search://local-ntp/local-ntp.html">
+                    <svg class="icon icon-tab " xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="#tab"></use>
+                    </svg><span>Open Default Tab</span></a>
+                <a class="menu__item menu__item--maps" data-type="link" href="#" title="" target="_blank">
+                    <svg class="icon icon-earth " xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="#earth"></use>
+                    </svg><span></span></a>
+                <a class="menu__item menu__item--download" href="#" target="_blank" data-type="link">
+                    <svg class="icon icon-download " xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="#download"></use>
+                    </svg><span>Download Wallpaper</span></a>
+                <a class="menu__item menu__item--gallery" href="https://g.co/ev" target="_blank" data-type="link">
+                    <svg class="icon icon-photo-library " xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="#photo-library"></use>
+                    </svg><span>Visit Web Gallery</span></a>
+            </div>
         </div>
-    </div>
-    <div class="share__deeplink overlay">
-        <div class="share__deeplink__content overlay__content">
-            <div class="overlay__content__close">
-                <svg class="icon icon-close " xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="#close"></use>
-                </svg>
-            </div>
-            <div class="share__deeplink__image"><img src="#"></div>
-            <div class="share__deeplink__url">
-                <input type="text">
-                <div class="share__deeplink__copy">Copy link</div>
-            </div>
-        </div>
-    </div>
-    <div class="history" data-offline="It seems that you are offline. The History does not work in offline mode."></div>
-    <div class="overlay overlay--changes">
-        <div class="overlay__content">
-            <div class="overlay__content__close overlay__content__close--dark">
-                <svg class="icon icon-close " xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="#close"></use>
-                </svg>
-            </div>
-            <div class="changes">
-                <div class="changes__header">
-                    <div class="changes__header__title">What's new in Earth View</div>
+        <share v-bind:sharelink="shareLink"></share>
+        <div class="share__deeplink overlay">
+            <div class="share__deeplink__content overlay__content">
+                <div class="overlay__content__close">
+                    <svg class="icon icon-close " xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="#close"></use>
+                    </svg>
                 </div>
-                <div class="changes__list">
-                    <div class="changes__list__item" data-type="views">
-                        <div class="changes__list__item__title">
-                            <svg class="icon icon-photo " xmlns="http://www.w3.org/2000/svg">
-                                <use xlink:href="#photo"></use>
-                            </svg><span>New views</span></div>
-                        <div class="changes__list__item__body">Enjoy 500 new views from Google Earth's satellite imagery.</div>
-                    </div>
-                    <div class="changes__list__item" data-type="history">
-                        <div class="changes__list__item__title">
-                            <svg class="icon icon-history " xmlns="http://www.w3.org/2000/svg">
-                                <use xlink:href="#history"></use>
-                            </svg><span>History</span></div>
-                        <div class="changes__list__item__body">See the images from the last 10 tabs you've opened.</div>
-                    </div>
-                    <div class="changes__list__item" data-type="download">
-                        <div class="changes__list__item__title">
-                            <svg class="icon icon-download " xmlns="http://www.w3.org/2000/svg">
-                                <use xlink:href="#download"></use>
-                            </svg><span>Download</span></div>
-                        <div class="changes__list__item__body">Grab any image as wallpaper for your desktop or mobile.</div>
-                    </div>
-                    <div class="changes__list__item" data-type="sharing">
-                        <div class="changes__list__item__title">
-                            <svg class="icon icon-share " xmlns="http://www.w3.org/2000/svg">
-                                <use xlink:href="#share"></use>
-                            </svg><span>Sharing</span></div>
-                        <div class="changes__list__item__body">Share your favorite image with your favorite people.</div>
-                    </div>
-                    <div class="changes__list__item" data-type="gallery">
-                        <div class="changes__list__item__title">
-                            <svg class="icon icon-photo-library " xmlns="http://www.w3.org/2000/svg">
-                                <use xlink:href="#photo-library"></use>
-                            </svg><span>Gallery</span></div>
-                        <div class="changes__list__item__body">Explore all 1500 images in our new<a href="https://g.co/ev" target="_blank">web gallery</a>.</div>
-                    </div>
+                <div class="share__deeplink__image"><img src="#"></div>
+                <div class="share__deeplink__url">
+                    <input type="text">
+                    <div class="share__deeplink__copy">Copy link</div>
                 </div>
             </div>
-            <div class="overlay__cta">
-                <button class="button changes__dismiss">Got it</button>
+        </div>
+        <div class="history" data-offline="It seems that you are offline. The History does not work in offline mode."></div>
+        <div class="overlay overlay--changes">
+            <div class="overlay__content">
+                <div class="overlay__content__close overlay__content__close--dark">
+                    <svg class="icon icon-close " xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="#close"></use>
+                    </svg>
+                </div>
+                <div class="changes">
+                    <div class="changes__header">
+                        <div class="changes__header__title">What's new in Earth View</div>
+                    </div>
+                    <div class="changes__list">
+                        <div class="changes__list__item" data-type="views">
+                            <div class="changes__list__item__title">
+                                <svg class="icon icon-photo " xmlns="http://www.w3.org/2000/svg">
+                                    <use xlink:href="#photo"></use>
+                                </svg><span>New views</span></div>
+                            <div class="changes__list__item__body">Enjoy 500 new views from Google Earth's satellite imagery.</div>
+                        </div>
+                        <div class="changes__list__item" data-type="history">
+                            <div class="changes__list__item__title">
+                                <svg class="icon icon-history " xmlns="http://www.w3.org/2000/svg">
+                                    <use xlink:href="#history"></use>
+                                </svg><span>History</span></div>
+                            <div class="changes__list__item__body">See the images from the last 10 tabs you've opened.</div>
+                        </div>
+                        <div class="changes__list__item" data-type="download">
+                            <div class="changes__list__item__title">
+                                <svg class="icon icon-download " xmlns="http://www.w3.org/2000/svg">
+                                    <use xlink:href="#download"></use>
+                                </svg><span>Download</span></div>
+                            <div class="changes__list__item__body">Grab any image as wallpaper for your desktop or mobile.</div>
+                        </div>
+                        <div class="changes__list__item" data-type="sharing">
+                            <div class="changes__list__item__title">
+                                <svg class="icon icon-share " xmlns="http://www.w3.org/2000/svg">
+                                    <use xlink:href="#share"></use>
+                                </svg><span>Sharing</span></div>
+                            <div class="changes__list__item__body">Share your favorite image with your favorite people.</div>
+                        </div>
+                        <div class="changes__list__item" data-type="gallery">
+                            <div class="changes__list__item__title">
+                                <svg class="icon icon-photo-library " xmlns="http://www.w3.org/2000/svg">
+                                    <use xlink:href="#photo-library"></use>
+                                </svg><span>Gallery</span></div>
+                            <div class="changes__list__item__body">Explore all 1500 images in our new<a href="https://g.co/ev" target="_blank">web gallery</a>.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="overlay__cta">
+                    <button class="button changes__dismiss">Got it</button>
+                </div>
             </div>
         </div>
-    </div>
     </div>
     <!-- 1 -->
 	<script data-main="js/newtab" src="node_modules/requirejs/require.js"></script>
