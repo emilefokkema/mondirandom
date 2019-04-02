@@ -9,7 +9,7 @@ var f = function(require){
 		console.log("https://emilefokkema.github.io/mondirandom/?i="+instruction.toString());
 	};
 
-	draw(window.innerWidth, window.innerHeight, document.getElementById("canvas"));
+	draw(window.innerWidth, window.innerHeight, document.getElementById("main_canvas"));
 }
 
 if(typeof module !== "undefined" && typeof require == "function"){
