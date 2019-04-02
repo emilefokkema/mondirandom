@@ -78,7 +78,7 @@
     </template>
     <template id="share-template">
         <div class="share">
-            <a class="floating-button floating-button--transparent share__deeplink__button" data-tooltip="left" data-title="Get link">
+            <a class="floating-button floating-button--transparent share__deeplink__button" data-tooltip="left" data-title="Get link" v-on:click="shareDeepLink">
                 <svg class="icon icon-share " xmlns="http://www.w3.org/2000/svg">
                     <use xlink:href="#share"></use>
                 </svg>
@@ -140,17 +140,17 @@
                     </svg><span>Visit Web Gallery</span></a>
             </div>
         </div>
-        <share v-bind:sharelink="shareLink"></share>
-        <div class="share__deeplink overlay">
+        <share v-bind:sharelink="shareLink" v-on:sharedeeplink="shareDeeplink"></share>
+        <div class="share__deeplink overlay" v-bind:class="{'overlay--active':deepLinkOverlayActive}" ref="overlay" v-on:click="closeOverlay">
             <div class="share__deeplink__content overlay__content">
-                <div class="overlay__content__close">
+                <div class="overlay__content__close" ref="overlayClose" v-on:click="closeOverlay">
                     <svg class="icon icon-close " xmlns="http://www.w3.org/2000/svg">
                         <use xlink:href="#close"></use>
                     </svg>
                 </div>
-                <div class="share__deeplink__image"><img src="#"></div>
+                <div class="share__deeplink__image"><canvas ref="thumbnailCanvas"/></div>
                 <div class="share__deeplink__url">
-                    <input type="text">
+                    <input type="text" ref="deepLinkInput">
                     <div class="share__deeplink__copy">Copy link</div>
                 </div>
             </div>

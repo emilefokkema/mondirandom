@@ -20,7 +20,7 @@ var f = function(require){
 		this.fieldIndices.push(fieldIndex);
 	};
 	Instruction.prototype.toString = function(){
-		var readable = ""+this.width+";"+this.height+";"+this.borderThickness+";"+this.numberOfSplits+";"+this.fieldIndices.join(",")+";"+this.directions.join("")+";"+this.colors.join("")+";"+this.splitPoints.join(",");
+		var readable = ""+this.width+";"+this.height+";"+this.borderThickness+";"+this.numberOfSplits+";"+this.fieldIndices.join(",")+";"+this.directions.join("")+";"+this.colors.map(this.getColorCode).join("")+";"+this.splitPoints.join(",");
 		return base64.encode(readable);
 	};
 	Instruction.prototype.getValueProvider = function(){
@@ -62,7 +62,7 @@ var f = function(require){
 		this.directions.push(direction);
 	};
 	Instruction.prototype.chooseColor = function(color){
-		this.colors.push(this.getColorCode(color));
+		this.colors.push(color);
 	};
 	Instruction.createForCanvas = function(canvas, config){
 		var instruction = new Instruction(canvas.width, canvas.height, config.borderThickness, config.numberOfSplits);

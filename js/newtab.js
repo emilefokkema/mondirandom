@@ -7,15 +7,34 @@ var f = function(require){
 	new Vue({
 		el: "#main",
 		data:function(){
-			return {shareLink:""}
+			return {
+				shareLink:"",
+				deepLinkOverlayActive:false,
+				instruction:undefined
+			}
+		},
+		methods:{
+			shareDeeplink:function(){
+				this.deepLinkOverlayActive = true;
+				var canvas = new CanvasWithSize(this.$refs.thumbnailCanvas, 440, 250);
+				this.instruction.executeOnCanvas(canvas);
+				this.$refs.deepLinkInput.value = this.shareLink;
+				this.$refs.deepLinkInput.focus();
+				this.$refs.deepLinkInput.select();
+			},
+			closeOverlay:function(event){
+				if (event.target === this.$refs.overlay || event.target === this.$refs.overlayClose) {
+					this.deepLinkOverlayActive = false;
+				}
+			}
 		},
 		mounted:function(){
 			var width = window.innerWidth,
 				height = window.innerHeight,
 				canvasElement = document.getElementById("main_canvas"),
-				canvas = new CanvasWithSize(canvasElement, width, height),
-				instruction = Instruction.createForCanvas(canvas, configProvider.getConfig());
-			this.shareLink = "https://emilefokkema.github.io/mondirandom/?i="+instruction.toString();
+				canvas = new CanvasWithSize(canvasElement, width, height);
+			this.instruction = Instruction.createForCanvas(canvas, configProvider.getConfig());
+			this.shareLink = "https://emilefokkema.github.io/mondirandom/?i="+this.instruction.toString();
 		},
 		components:{
 			'share':{
@@ -29,6 +48,9 @@ var f = function(require){
 						  'Share',
 						  'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600'
 						);
+					},
+					shareDeepLink:function(){
+						this.$emit("sharedeeplink");
 					},
 					shareFacebook:function(){
 						var facebookLink = "https://www.facebook.com/sharer/sharer.php?u="+this.sharelink;
