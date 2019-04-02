@@ -151,7 +151,7 @@
                 <div class="share__deeplink__image"><canvas ref="thumbnailCanvas"/></div>
                 <div class="share__deeplink__url">
                     <input type="text" ref="deepLinkInput">
-                    <div class="share__deeplink__copy">Copy link</div>
+                    <div class="share__deeplink__copy" v-on:click="copyDeepLink">Copy link</div>
                 </div>
             </div>
         </div>

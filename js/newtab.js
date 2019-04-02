@@ -22,6 +22,11 @@ var f = function(require){
 				this.$refs.deepLinkInput.focus();
 				this.$refs.deepLinkInput.select();
 			},
+			copyDeepLink:function(){
+				this.$refs.deepLinkInput.focus();
+				this.$refs.deepLinkInput.select();
+				document.execCommand('copy');
+			},
 			closeOverlay:function(event){
 				if (event.target === this.$refs.overlay || event.target === this.$refs.overlayClose) {
 					this.deepLinkOverlayActive = false;
