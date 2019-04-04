@@ -1,10 +1,9 @@
 describe("an interval", function(){
 	var Interval = require("../js/interval.js");
-		var TestRandomValueProvider = require("./test-random-value-provider.js");
 	var instance;
 	
 	beforeEach(function(){
-		instance = new Interval(1, 3, new TestRandomValueProvider());
+		instance = new Interval(1, 3);
 	});
 	
 	it("should have a length", function(){
@@ -19,7 +18,7 @@ describe("an interval", function(){
 		var overlappingOne;
 		
 		beforeEach(function(){
-			overlappingOne = new Interval(2, 4, new TestRandomValueProvider());
+			overlappingOne = new Interval(2, 4);
 		});
 		
 		it("should have an overlap", function(){
@@ -33,7 +32,7 @@ describe("an interval", function(){
 		var equalOne;
 		
 		beforeEach(function(){
-			equalOne = new Interval(1, 3, new TestRandomValueProvider());
+			equalOne = new Interval(1, 3);
 		});
 		
 		it("should have an overlap", function(){
@@ -47,7 +46,7 @@ describe("an interval", function(){
 		var overlappingOne;
 		
 		beforeEach(function(){
-			overlappingOne = new Interval(0, 2, new TestRandomValueProvider());
+			overlappingOne = new Interval(0, 2);
 		});
 		
 		it("should have an overlap", function(){
@@ -60,7 +59,7 @@ describe("an interval", function(){
 		var touchingOne;
 		
 		beforeEach(function(){
-			touchingOne = new Interval(3, 4, new TestRandomValueProvider());
+			touchingOne = new Interval(3, 4);
 		});
 		
 		it("should not have an overlap", function(){
@@ -72,7 +71,7 @@ describe("an interval", function(){
 		var nonOverlappingOne;
 		
 		beforeEach(function(){
-			nonOverlappingOne = new Interval(4, 5, new TestRandomValueProvider());
+			nonOverlappingOne = new Interval(4, 5);
 		});
 		
 		it("should not have an overlap", function(){

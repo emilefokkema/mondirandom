@@ -3,7 +3,6 @@ var f = function(require){
 	var base64 = require("./base64");
 	var InstructionValueProvider = require("./instruction-value-provider");
 	var FieldSplitter = require("./field-splitter");
-	var RandomValueProvider = require("./random-value-provider");
 	var TrackingValueProvider = require("./tracking-value-provider");
 
 	var Instruction = function(width, height, borderThickness, numberOfSplits){
@@ -64,9 +63,9 @@ var f = function(require){
 	Instruction.prototype.chooseColor = function(color){
 		this.colors.push(color);
 	};
-	Instruction.createForCanvas = function(canvas, config){
+	Instruction.createForCanvas = function(canvas, config, valueProvider){
 		var instruction = new Instruction(canvas.width, canvas.height, config.borderThickness, config.numberOfSplits);
-		var valueProvider = new TrackingValueProvider(new RandomValueProvider(config.random), instruction);
+		var valueProvider = new TrackingValueProvider(valueProvider, instruction);
 		instruction.execute(valueProvider, canvas);
 		return instruction;
 	};

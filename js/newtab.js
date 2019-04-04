@@ -3,6 +3,7 @@ var f = function(require){
 	var CanvasWithSize = require("./canvas-with-size");
 	var configProvider = require("./config-provider");
 	var Vue = require("vue");
+	var RandomValueProvider = require("./random-value-provider");
 
 	new Vue({
 		el: "#main",
@@ -38,7 +39,8 @@ var f = function(require){
 				height = window.innerHeight,
 				canvasElement = document.getElementById("main_canvas"),
 				canvas = new CanvasWithSize(canvasElement, width, height);
-			this.instruction = Instruction.createForCanvas(canvas, configProvider.getConfig());
+			var config = configProvider.getConfig();
+			this.instruction = Instruction.createForCanvas(canvas, config, new RandomValueProvider(config.random));
 			this.shareLink = "https://emilefokkema.github.io/mondirandom/?i="+this.instruction.toString();
 		},
 		components:{

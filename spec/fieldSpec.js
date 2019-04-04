@@ -3,7 +3,6 @@ describe("A field", function(){
 	var Color = require("../js/color.js");
 	var FieldColoring = require("../js/field-coloring.js");
 	var splitFieldInDirection = require("./split-field-in-direction.js");
-	var TestRandomValueProvider = require("./test-random-value-provider.js");
 	var Direction = require("../js/direction.js");
 	var randomValueProviderConfig = {
 			maxSplittableRatio: 10,
