@@ -2,11 +2,10 @@ describe("an side", function(){
 	var Interval = require("../js/interval.js");
 	var Side = require("../js/side.js");
 	var Direction = require("../js/direction.js");
-		var TestRandomValueProvider = require("./test-random-value-provider.js");
 	var instance;
 	
 	beforeEach(function(){
-		var interval = new Interval(1, 3, new TestRandomValueProvider());
+		var interval = new Interval(1, 3);
 		instance = new Side(interval, 0, Direction.HORIZONTAL);
 	});
 	
@@ -18,7 +17,7 @@ describe("an side", function(){
 		var overlappingOne;
 		
 		beforeEach(function(){
-			var interval = new Interval(2, 4, new TestRandomValueProvider());
+			var interval = new Interval(2, 4);
 			overlappingOne = new Side(interval, 0, Direction.HORIZONTAL);
 		});
 
@@ -42,7 +41,7 @@ describe("an side", function(){
 		var oneWithDifferentDirection;
 		
 		beforeEach(function(){
-			var interval = new Interval(-1, 1, new TestRandomValueProvider());
+			var interval = new Interval(-1, 1);
 			oneWithDifferentDirection = new Side(interval, 2, Direction.VERTICAL);
 		});
 
@@ -59,7 +58,7 @@ describe("an side", function(){
 		var oneWithDifferentPosition;
 		
 		beforeEach(function(){
-			var interval = new Interval(1, 3, new TestRandomValueProvider());
+			var interval = new Interval(1, 3);
 			oneWithDifferentPosition = new Side(interval, 1, Direction.HORIZONTAL);
 		});
 
