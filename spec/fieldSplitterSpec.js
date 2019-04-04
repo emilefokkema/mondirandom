@@ -129,8 +129,8 @@ describe("A FieldSplitter", function(){
 				spyOn(fakeContext,'fillRect');
 				fillStyleSpy = spyOnProperty(fakeContext, 'fillStyle', 'set');
 				drawFieldsInColors([
-					{field: instance.fields[0], color: Color.RED},
-					{field: instance.fields[1], color: Color.BLUE}
+					Color.RED,
+					Color.BLUE
 				], fakeContext);
 			});
 

@@ -1,27 +1,37 @@
 var TestRandomValueProvider = function(){
-	this.randomField = undefined;
-	this.randomDirection = undefined;
+	this._randomFieldIndices = [];
+	this._randomDirections = [];
 	this.fieldColors = [];
-	this.randomRatio = undefined;
-	this.randomSplitPoint = undefined;
+	this._randomSplitPoints = [];
 };
 TestRandomValueProvider.prototype.provideField = function(fieldSplitter){
-	return this.randomField;
+	return fieldSplitter.fields[this._randomFieldIndices.shift()];
 };
 TestRandomValueProvider.prototype.provideDirection = function(field){
-	return this.randomDirection;
+	return this._randomDirections.shift();
 };
 TestRandomValueProvider.prototype.provideSplitPoint = function(field, direction){
-	return this.randomSplitPoint;
+	return this._randomSplitPoints.shift();
 };
 TestRandomValueProvider.prototype.provideColor = function(field, fieldColoring){
-	for(var i=0;i<this.fieldColors.length;i++){
-		var fieldColor = this.fieldColors[i];
-		if(fieldColor.field == field){
-			return fieldColor.color;
+	return this.fieldColors.shift();
+};
+Object.defineProperties(TestRandomValueProvider.prototype, {
+	randomFieldIndex:{
+		set:function(i){
+			this._randomFieldIndices.push(i)
+		}
+	},
+	randomDirection:{
+		set:function(d){
+			this._randomDirections.push(d);
+		}
+	},
+	randomSplitPoint:{
+		set:function(p){
+			this._randomSplitPoints.push(p);
 		}
 	}
-	throw 'No color provided for field';
-};
+});
 
 module.exports = TestRandomValueProvider;
