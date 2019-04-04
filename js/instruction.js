@@ -4,6 +4,7 @@ var f = function(require){
 	var InstructionValueProvider = require("./instruction-value-provider");
 	var FieldSplitter = require("./field-splitter");
 	var TrackingValueProvider = require("./tracking-value-provider");
+	var FieldColoring = require("./field-coloring");
 
 	var Instruction = function(width, height, borderThickness, numberOfSplits){
 		this.width = width;
@@ -19,22 +20,21 @@ var f = function(require){
 		this.fieldIndices.push(fieldIndex);
 	};
 	Instruction.prototype.toString = function(){
-		var readable = ""+this.width+";"+this.height+";"+this.borderThickness+";"+this.numberOfSplits+";"+this.fieldIndices.join(",")+";"+this.directions.join("")+";"+this.colors.join("")+";"+this.splitPoints.join(",");
+		var readable = ""+this.width+";"+this.height+";"+this.borderThickness+";"+this.numberOfSplits+";"+this.fieldIndices.join(",")+";"+this.directions.join("")+";"+this.colors.map(this.getColorCode).join("")+";"+this.splitPoints.join(",");
 		return base64.encode(readable);
 	};
 	Instruction.prototype.getValueProvider = function(){
 		return new InstructionValueProvider(this);
 	};
-	Instruction.prototype.execute = function(valueProvider, canvas){
-		var splitter = new FieldSplitter(this.width, this.height, {borderThickness: this.borderThickness});
-		for(var i=0;i<this.numberOfSplits;i++){
-			splitter.splitRandomField(valueProvider);
-		}
-		splitter.draw(canvas.context, valueProvider);
+	Instruction.prototype.getFieldSplitter = function(){
+		return new FieldSplitter(this.width, this.height, {borderThickness: this.borderThickness});
 	};
 	Instruction.prototype.executeOnCanvas = function(canvas){
 		canvas.fitDrawingOfSize(this.width, this.height);
-		this.execute(new InstructionValueProvider(this), canvas);
+		var valueProvider = new InstructionValueProvider(this);
+		var splitter = this.getFieldSplitter();
+		splitter.splitFields(valueProvider, this.numberOfSplits);
+		splitter.draw(canvas.context, valueProvider);
 	};
 	Instruction.prototype.getColorCode = function(color){
 		switch(color){
@@ -61,13 +61,13 @@ var f = function(require){
 		this.directions.push(direction);
 	};
 	Instruction.prototype.chooseColor = function(color){
-		this.colors.push(this.getColorCode(color));
+		this.colors.push(color);
 	};
-	Instruction.createForCanvas = function(canvas, config, valueProvider){
-		var instruction = new Instruction(canvas.width, canvas.height, config.borderThickness, config.numberOfSplits);
-		var valueProvider = new TrackingValueProvider(valueProvider, instruction);
-		instruction.execute(valueProvider, canvas);
-		return instruction;
+	Instruction.prototype.fill = function(valueProvider){
+		valueProvider = new TrackingValueProvider(valueProvider, this);
+		var splitter = this.getFieldSplitter();
+		splitter.splitFields(valueProvider, this.numberOfSplits);
+		splitter.colorFields(new FieldColoring(), valueProvider);
 	};
 	Instruction.parse = function(str){
 		var readable = base64.decode(str);

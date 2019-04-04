@@ -7,7 +7,9 @@ var f = function(require){
 	var draw = function(width, height, canvasElement){
 		var canvas = new CanvasWithSize(canvasElement, width, height);
 		var config = configProvider.getConfig();
-		var instruction = Instruction.createForCanvas(canvas, config, new RandomValueProvider(config.random));
+		var instruction = new Instruction(width, height, config.borderThickness, config.numberOfSplits);
+		instruction.fill(new RandomValueProvider(config.random));
+		instruction.executeOnCanvas(canvas);
 		console.log("https://emilefokkema.github.io/mondirandom/?i="+instruction.toString());
 	};
 
