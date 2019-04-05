@@ -20,6 +20,11 @@ var f = function(require){
 		this.smallestRelativeArea = Math.min(this.smallestRelativeArea, relativeArea);
 		return new Field(rectangle, this, this.configuration);
 	};
+	FieldSplitter.prototype.splitFields = function(valueProvider, nTimes){
+		for(var i=0;i<nTimes;i++){
+			this.splitRandomField(valueProvider);
+		}
+	};
 	FieldSplitter.prototype.splitRandomField = function(valueProvider){
 		var self = this;
 		var field = valueProvider.provideField(this);
@@ -28,10 +33,9 @@ var f = function(require){
 		this.borders.push(split.border);
 		this.fields.splice(index, 1, split.fields[0], split.fields[1]);
 	};
-	FieldSplitter.prototype.drawFields = function(context, valueProvider){
-		var fieldColoring = new FieldColoring();
+	FieldSplitter.prototype.drawFields = function(context, fieldColoring){
 		for(var i=0;i<this.fields.length;i++){
-			this.fields[i].draw(context, valueProvider, fieldColoring);
+			this.fields[i].draw(context, fieldColoring);
 		}
 	};
 	FieldSplitter.prototype.drawBorders = function(context){
@@ -39,8 +43,16 @@ var f = function(require){
 			this.borders[i].draw(context, Color.BLACK);
 		}
 	};
+	FieldSplitter.prototype.colorFields = function(fieldColoring, valueProvider){
+		for(var i=0;i<this.fields.length;i++){
+			this.fields[i].color(valueProvider, fieldColoring);
+		}
+		return fieldColoring;
+	};
 	FieldSplitter.prototype.draw = function(context, valueProvider){
-		this.drawFields(context, valueProvider);
+		var fieldColoring = new FieldColoring();
+		this.colorFields(fieldColoring, valueProvider);
+		this.drawFields(context, fieldColoring);
 		this.drawBorders(context, valueProvider);
 	};
 	return FieldSplitter;
