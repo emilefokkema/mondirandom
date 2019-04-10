@@ -1,6 +1,8 @@
 var f = function(require){
 	var Instruction = require("./instruction");
 	var CanvasWithSize = require("./canvas-with-size");
+	var InstructionValueProvider = require("./instruction-value-provider");
+	var FieldSplitter = require("./field-splitter");
 
 	var draw = function(width, height, canvasElement){
 		var canvas = new CanvasWithSize(canvasElement, width, height);
@@ -9,7 +11,9 @@ var f = function(require){
 			var match = queryStringParams.match(/i=([^&]+)/);
 			if(match){
 				var instruction = Instruction.parse(match[1]);
-				instruction.executeOnCanvas(canvas);
+				var splitter = new FieldSplitter(width, height, {borderThickness: instruction.borderThickness});
+				splitter.splitAndColor(new InstructionValueProvider(instruction), instruction.numberOfSplits);
+				splitter.draw(canvas.context);
 				return;
 			}
 		}

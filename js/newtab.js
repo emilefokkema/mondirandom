@@ -3,14 +3,15 @@ var f = function(require){
 	var CanvasWithSize = require("./canvas-with-size");
 	var configProvider = require("./config-provider");
 	var RandomValueProvider = require("./random-value-provider");
+	var FieldSplitter = require("./field-splitter");
 
 	var draw = function(width, height, canvasElement){
 		var canvas = new CanvasWithSize(canvasElement, width, height);
 		var config = configProvider.getConfig();
-		var instruction = new Instruction(width, height, config.borderThickness, config.numberOfSplits);
-		instruction.fill(new RandomValueProvider(config.random));
-		instruction.executeOnCanvas(canvas);
-		console.log("https://emilefokkema.github.io/mondirandom/?i="+instruction.toString());
+		var splitter = new FieldSplitter(width, height, {borderThickness: config.borderThickness});
+		splitter.splitAndColor(new RandomValueProvider(config.random), config.numberOfSplits);
+		splitter.draw(canvas.context);
+		console.log("https://emilefokkema.github.io/mondirandom/?i="+splitter.instruction.toString());
 	};
 
 	draw(window.innerWidth, window.innerHeight, document.getElementById("canvas"));

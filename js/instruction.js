@@ -2,7 +2,6 @@ var f = function(require){
 	var Color = require("./color");
 	var base64 = require("./base64");
 	var InstructionValueProvider = require("./instruction-value-provider");
-	var FieldSplitter = require("./field-splitter");
 	var TrackingValueProvider = require("./tracking-value-provider");
 	var FieldColoring = require("./field-coloring");
 
@@ -25,9 +24,6 @@ var f = function(require){
 	};
 	Instruction.prototype.getValueProvider = function(){
 		return new InstructionValueProvider(this);
-	};
-	Instruction.prototype.getFieldSplitter = function(){
-		return new FieldSplitter(this.width, this.height, {borderThickness: this.borderThickness});
 	};
 	Instruction.prototype.executeOnCanvas = function(canvas){
 		canvas.fitDrawingOfSize(this.width, this.height);

@@ -101,6 +101,32 @@ describe("A FieldSplitter", function(){
 		});
 	});
 
+	describe("when it splits, colors and is drawn", function(){
+		var fakeContext;
+		var fillStyleSpy;
+
+		beforeEach(function(){
+			var valueProvider = new TestRandomValueProvider();
+			valueProvider.randomFieldIndex = 0;
+			valueProvider.randomDirection = Direction.VERTICAL;
+			valueProvider.randomSplitPoint = 2;
+			valueProvider.fieldColors = [Color.RED, Color.BLUE];
+			instance.splitAndColor(valueProvider, 1);
+			fakeContext = new FakeContext();
+			spyOn(fakeContext,'fillRect');
+			fillStyleSpy = spyOnProperty(fakeContext, 'fillStyle', 'set');
+			instance.draw(fakeContext);
+		});
+
+		it("should draw two rectangles", function(){
+			expect(fillStyleSpy).toHaveBeenCalledWith(Color.RED);
+			expect(fillStyleSpy).toHaveBeenCalledWith(Color.BLUE);
+			expect(fakeContext.fillRect).toHaveBeenCalledWith(0, 0, 2, 10);
+			expect(fakeContext.fillRect).toHaveBeenCalledWith(2, 0, 8, 10);
+			expect(fakeContext.fillRect).toHaveBeenCalledWith(1.5, 0, 1, 10);
+		});
+	});
+
 	describe("when it splits a random field", function(){
 		var field1, field2;
 
@@ -118,29 +144,6 @@ describe("A FieldSplitter", function(){
 		it("each field should have the other as neighbor", function(){
 			checkNeighbors(field1, [field2]);
 			checkNeighbors(field2, [field1]);
-		});
-
-		describe("and it is drawn", function(){
-			var fakeContext;
-			var fillStyleSpy;
-
-			beforeEach(function(){
-				fakeContext = new FakeContext();
-				spyOn(fakeContext,'fillRect');
-				fillStyleSpy = spyOnProperty(fakeContext, 'fillStyle', 'set');
-				drawFieldsInColors([
-					Color.RED,
-					Color.BLUE
-				], fakeContext);
-			});
-
-			it("should draw two rectangles", function(){
-				expect(fillStyleSpy).toHaveBeenCalledWith(Color.RED);
-				expect(fillStyleSpy).toHaveBeenCalledWith(Color.BLUE);
-				expect(fakeContext.fillRect).toHaveBeenCalledWith(0, 0, 2, 10);
-				expect(fakeContext.fillRect).toHaveBeenCalledWith(2, 0, 8, 10);
-				expect(fakeContext.fillRect).toHaveBeenCalledWith(1.5, 0, 1, 10);
-			});
 		});
 	});
 });
