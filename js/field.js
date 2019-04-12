@@ -100,9 +100,12 @@ var f = function(require){
 		}
 		return result;
 	};
-	Field.prototype.draw = function(context, valueProvider, fieldColoring){
+	Field.prototype.color = function(valueProvider, fieldColoring){
 		var color = valueProvider.provideColor(this, fieldColoring);
 		fieldColoring.colorField(this, color);
+	};
+	Field.prototype.draw = function(context, fieldColoring){
+		var color = fieldColoring.getFieldColoring(this).color;
 		this.rectangle.draw(context, color);
 	};
 	return Field;

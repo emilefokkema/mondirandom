@@ -3,9 +3,13 @@ var f = function(require){
 	var FieldColoring = require("./field-coloring");
 	var Rectangle = require("./rectangle");
 	var Color = require("./color");
+	var Instruction = require("./instruction");
 	var Distribution = require("./distribution");
+	var TrackingValueProvider = require("./tracking-value-provider");
 
 	var FieldSplitter = function(width, height, configuration){
+		this.instruction = new Instruction(width, height, configuration.borderThickness, 0);
+		this.fieldColoring = new FieldColoring();
 		this.configuration = configuration;
 		this.borders = [];
 		this.totalArea = width * height;
@@ -20,6 +24,16 @@ var f = function(require){
 		this.smallestRelativeArea = Math.min(this.smallestRelativeArea, relativeArea);
 		return new Field(rectangle, this, this.configuration);
 	};
+	FieldSplitter.prototype.splitAndColor = function(valueProvider, nTimes){
+		this.instruction.numberOfSplits += nTimes;
+		valueProvider = new TrackingValueProvider(valueProvider, this.instruction);
+		for(var i=0;i<nTimes;i++){
+			this.splitRandomField(valueProvider);
+		}
+		for(var i=0;i<this.fields.length;i++){
+			this.fields[i].color(valueProvider, this.fieldColoring);
+		}
+	};
 	FieldSplitter.prototype.splitRandomField = function(valueProvider){
 		var self = this;
 		var field = valueProvider.provideField(this);
@@ -28,10 +42,9 @@ var f = function(require){
 		this.borders.push(split.border);
 		this.fields.splice(index, 1, split.fields[0], split.fields[1]);
 	};
-	FieldSplitter.prototype.drawFields = function(context, valueProvider){
-		var fieldColoring = new FieldColoring();
+	FieldSplitter.prototype.drawFields = function(context){
 		for(var i=0;i<this.fields.length;i++){
-			this.fields[i].draw(context, valueProvider, fieldColoring);
+			this.fields[i].draw(context, this.fieldColoring);
 		}
 	};
 	FieldSplitter.prototype.drawBorders = function(context){
@@ -39,9 +52,9 @@ var f = function(require){
 			this.borders[i].draw(context, Color.BLACK);
 		}
 	};
-	FieldSplitter.prototype.draw = function(context, valueProvider){
-		this.drawFields(context, valueProvider);
-		this.drawBorders(context, valueProvider);
+	FieldSplitter.prototype.draw = function(context){
+		this.drawFields(context);
+		this.drawBorders(context);
 	};
 	return FieldSplitter;
 }
