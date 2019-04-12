@@ -2,6 +2,7 @@ var f = function(require){
 	var Instruction = require("./instruction");
 	var CanvasWithSize = require("./canvas-with-size");
 	var configProvider = require("./config-provider");
+	var history = require("./history");
 	var Vue = require("vue");
 	var RandomValueProvider = require("./random-value-provider");
 	var FieldSplitter = require("./field-splitter");
@@ -48,8 +49,11 @@ var f = function(require){
 			var splitter = new FieldSplitter(width, height, {borderThickness: config.borderThickness});
 			splitter.splitAndColor(new RandomValueProvider(config.random), config.numberOfSplits);
 			splitter.draw(canvas.context);
-			this.instruction = splitter.instruction;
-			this.shareLink = "https://emilefokkema.github.io/mondirandom/?i="+this.instruction.toString();
+			var instruction = splitter.instruction;
+			this.instruction = instruction;
+			var instructionString = instruction.toString();
+			history.addPaintingInstruction(instructionString);
+			this.shareLink = "https://emilefokkema.github.io/mondirandom/?i="+instructionString;
 		},
 		components:{
 			'share':{
