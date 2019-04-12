@@ -1,17 +1,19 @@
 var f = function(require){
 	var Instruction = require("./instruction");
 	var CanvasWithSize = require("./canvas-with-size");
+	var FieldSplitter = require("./field-splitter");
 
 	var draw = function(width, height, canvasElement){
 		var canvas = new CanvasWithSize(canvasElement, width, height);
-		var queryStringParams = window.location.search;
-		if(queryStringParams){
-			var match = queryStringParams.match(/i=([^&]+)/);
-			if(match){
-				var instruction = Instruction.parse(match[1]);
-				instruction.executeOnCanvas(canvas);
-				return;
-			}
+		var queryStringParams = new URLSearchParams(window.location.search);
+		var i = queryStringParams.get("i");
+		if(i){
+			var instruction = Instruction.parse(i);
+			var splitter = new FieldSplitter(instruction.width, instruction.height, {borderThickness: instruction.borderThickness});
+			splitter.splitAndColor(instruction.getValueProvider(), instruction.numberOfSplits);
+			canvas.fitDrawingOfSize(instruction.width, instruction.height);
+			splitter.draw(canvas.context);
+			return;
 		}
 	};
 

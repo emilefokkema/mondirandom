@@ -4,6 +4,7 @@ var f = function(require){
 	var configProvider = require("./config-provider");
 	var Vue = require("vue");
 	var RandomValueProvider = require("./random-value-provider");
+	var FieldSplitter = require("./field-splitter");
 
 	new Vue({
 		el: "#main",
@@ -17,8 +18,12 @@ var f = function(require){
 		methods:{
 			shareDeeplink:function(){
 				this.deepLinkOverlayActive = true;
+				var instruction = this.instruction;
 				var canvas = new CanvasWithSize(this.$refs.thumbnailCanvas, 440, 250);
-				this.instruction.executeOnCanvas(canvas);
+				var splitter = new FieldSplitter(instruction.width, instruction.height, {borderThickness: instruction.borderThickness});
+				splitter.splitAndColor(instruction.getValueProvider(), instruction.numberOfSplits);
+				canvas.fitDrawingOfSize(instruction.width, instruction.height);
+				splitter.draw(canvas.context);
 				this.$refs.deepLinkInput.value = this.shareLink;
 				this.$refs.deepLinkInput.focus();
 				this.$refs.deepLinkInput.select();
@@ -40,10 +45,10 @@ var f = function(require){
 				canvasElement = document.getElementById("main_canvas"),
 				canvas = new CanvasWithSize(canvasElement, width, height);
 			var config = configProvider.getConfig();
-			var instruction = new Instruction(width, height, config.borderThickness, config.numberOfSplits);
-			instruction.fill(new RandomValueProvider(config.random));
-			instruction.executeOnCanvas(canvas);
-			this.instruction = instruction;
+			var splitter = new FieldSplitter(width, height, {borderThickness: config.borderThickness});
+			splitter.splitAndColor(new RandomValueProvider(config.random), config.numberOfSplits);
+			splitter.draw(canvas.context);
+			this.instruction = splitter.instruction;
 			this.shareLink = "https://emilefokkema.github.io/mondirandom/?i="+this.instruction.toString();
 		},
 		components:{
