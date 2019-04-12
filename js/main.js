@@ -11,8 +11,9 @@ var f = function(require){
 			var match = queryStringParams.match(/i=([^&]+)/);
 			if(match){
 				var instruction = Instruction.parse(match[1]);
-				var splitter = new FieldSplitter(width, height, {borderThickness: instruction.borderThickness});
+				var splitter = new FieldSplitter(instruction.width, instruction.height, {borderThickness: instruction.borderThickness});
 				splitter.splitAndColor(new InstructionValueProvider(instruction), instruction.numberOfSplits);
+				canvas.fitDrawingOfSize(instruction.width, instruction.height);
 				splitter.draw(canvas.context);
 				return;
 			}
