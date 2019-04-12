@@ -2,7 +2,6 @@ var f = function(require){
 	var Color = require("./color");
 	var base64 = require("./base64");
 	var InstructionValueProvider = require("./instruction-value-provider");
-	var TrackingValueProvider = require("./tracking-value-provider");
 	var FieldColoring = require("./field-coloring");
 
 	var Instruction = function(width, height, borderThickness, numberOfSplits){
@@ -24,13 +23,6 @@ var f = function(require){
 	};
 	Instruction.prototype.getValueProvider = function(){
 		return new InstructionValueProvider(this);
-	};
-	Instruction.prototype.executeOnCanvas = function(canvas){
-		canvas.fitDrawingOfSize(this.width, this.height);
-		var valueProvider = new InstructionValueProvider(this);
-		var splitter = this.getFieldSplitter();
-		splitter.splitFields(valueProvider, this.numberOfSplits);
-		splitter.draw(canvas.context, valueProvider);
 	};
 	Instruction.prototype.getColorCode = function(color){
 		switch(color){
@@ -58,12 +50,6 @@ var f = function(require){
 	};
 	Instruction.prototype.chooseColor = function(color){
 		this.colors.push(color);
-	};
-	Instruction.prototype.fill = function(valueProvider){
-		valueProvider = new TrackingValueProvider(valueProvider, this);
-		var splitter = this.getFieldSplitter();
-		splitter.splitFields(valueProvider, this.numberOfSplits);
-		splitter.colorFields(new FieldColoring(), valueProvider);
 	};
 	Instruction.parse = function(str){
 		var readable = base64.decode(str);
