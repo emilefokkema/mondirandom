@@ -4,27 +4,39 @@ var f = function(require){
 	var configProvider = require("./config-provider");
 	var history = require("./history");
 	var Vue = require("vue");
-	var RandomValueProvider = require("./random-value-provider");
-	var FieldSplitter = require("./field-splitter");
 
 	new Vue({
 		el: "#main",
 		data:function(){
 			return {
-				shareLink:"",
 				deepLinkOverlayActive:false,
-				instruction:undefined
+				instruction:undefined,
+				historyShown:false,
+				historyList:[]
+			}
+		},
+		computed:{
+			shareLink:function(){
+				return "https://emilefokkema.github.io/mondirandom/?i="+(this.instruction || "").toString();
 			}
 		},
 		methods:{
+			onItemSelected:function(data){
+				var instruction = Instruction.parse(data.instruction);
+				this.getCanvas().displayMondirandom(instruction);
+				this.instruction = instruction;
+			},
+			showHistory:function(){
+				this.historyShown = true;
+			},
+			hideHistory:function(){
+				this.historyShown = false;
+			},
 			shareDeeplink:function(){
 				this.deepLinkOverlayActive = true;
 				var instruction = this.instruction;
 				var canvas = new CanvasWithSize(this.$refs.thumbnailCanvas, 440, 250);
-				var splitter = new FieldSplitter(instruction.width, instruction.height, {borderThickness: instruction.borderThickness});
-				splitter.splitAndColor(instruction.getValueProvider(), instruction.numberOfSplits);
-				canvas.fitDrawingOfSize(instruction.width, instruction.height);
-				splitter.draw(canvas.context);
+				canvas.displayMondirandom(this.instruction);
 				this.$refs.deepLinkInput.value = this.shareLink;
 				this.$refs.deepLinkInput.focus();
 				this.$refs.deepLinkInput.select();
@@ -34,6 +46,9 @@ var f = function(require){
 				this.$refs.deepLinkInput.select();
 				document.execCommand('copy');
 			},
+			getCanvas:function(){
+				return new CanvasWithSize(document.getElementById("main_canvas"), window.innerWidth, window.innerHeight);
+			},
 			closeOverlay:function(event){
 				if (event.target === this.$refs.overlay || event.target === this.$refs.overlayClose) {
 					this.deepLinkOverlayActive = false;
@@ -41,19 +56,30 @@ var f = function(require){
 			}
 		},
 		mounted:function(){
-			var width = window.innerWidth,
-				height = window.innerHeight,
-				canvasElement = document.getElementById("main_canvas"),
-				canvas = new CanvasWithSize(canvasElement, width, height);
-			var config = configProvider.getConfig();
-			var splitter = new FieldSplitter(width, height, {borderThickness: config.borderThickness});
-			splitter.splitAndColor(new RandomValueProvider(config.random), config.numberOfSplits);
-			splitter.draw(canvas.context);
-			var instruction = splitter.instruction;
-			this.instruction = instruction;
-			var instructionString = instruction.toString();
-			history.addPaintingInstruction(instructionString);
-			this.shareLink = "https://emilefokkema.github.io/mondirandom/?i="+instructionString;
+			var self = this;
+			this.instruction = this.getCanvas().createMondirandom(configProvider.getConfig());
+			history.addPaintingInstruction(this.instruction.toString());
+			window.addEventListener("click", function(event){
+				if (event.target.className !== 'content') {
+				  return;
+				}
+				self.hideHistory();
+			});
+			window.addEventListener("wheel", function(event){
+				if (
+				  Math.abs(event.deltaX) > Math.abs(event.deltaY) ||
+				  event.deltaY === 0
+				) {
+				  return;
+				}
+
+				if (event.deltaY > 0) {
+				  self.showHistory();
+				} else {
+				  self.hideHistory();
+				}
+			});
+			this.historyList = history.getAll();
 		},
 		components:{
 			'share':{
@@ -81,6 +107,60 @@ var f = function(require){
 					}
 				},
 				template:document.getElementById("share-template").innerHTML
+			},
+			'history':{
+				props:{
+					instructions:Array
+				},
+				template:document.getElementById("historyTemplate").innerHTML,
+				methods:{
+					onItemSelected:function(data){
+						this.$emit("itemselected", data);
+					}
+				},
+				computed:{
+					items:function(){
+						return this.instructions && this.instructions.map(function(i){return {instruction: i};}) || [];
+					},
+					placeholders:function(){
+						var number = 10;
+						if(this.instructions){
+							number -= this.instructions.length;
+						}
+						return Array.apply(null, new Array(number)).map(function(x, i){return {index: i};});
+					}
+				},
+				components:{
+					'placeholder':{
+						template:document.getElementById("placeholderTemplate").innerHTML
+					},
+					'item':{
+						props:{
+							instruction: String
+						},
+						data:function(){
+							return {
+								title: "Nameless"
+							};
+						},
+						methods:{
+							select:function(){
+								this.$emit("itemselected", {instruction:this.instruction});
+							}
+						},
+						mounted:function(){
+							var div = this.$refs.imagediv;
+							var rect = div.getBoundingClientRect();
+							var canvasElement = document.createElement("canvas");
+							var canvas = new CanvasWithSize(canvasElement, rect.width, rect.height);
+							var parsedInstruction = Instruction.parse(this.instruction);
+							canvas.displayMondirandom(parsedInstruction);
+							var dataUrl = canvasElement.toDataURL();
+							div.style.backgroundImage = "url("+dataUrl+")";
+						},
+						template:document.getElementById("itemTemplate").innerHTML
+					}
+				}
 			}
 		}
 	});

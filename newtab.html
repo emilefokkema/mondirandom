@@ -56,18 +56,22 @@
             <path d="M121.267,81.888c-3.484,-3.65 -8.355,-6.917 -14.884,-6.708c-3.208,0.091 -6.412,1.316 -8.983,2.954c-2.625,1.587 -4.642,3.604 -6.458,5.375c-1.817,1.754 -3.35,3.504 -4.605,4.533c-0.587,0.534 -1.087,0.829 -1.291,0.921c-0.2,0.108 -0.404,0.192 -0.579,0.263c-0.8,-1.375 -1.546,-3.563 -2.221,-5.817c-1.521,-4.533 -2.588,-9.863 -6.584,-14.983c-0.516,-0.655 -1.037,-1.18 -1.762,-1.85c-0.829,-0.734 -1.946,-1.442 -3.263,-1.813c-2.754,-0.775 -5.191,0.117 -6.658,1.008c-3.021,1.884 -4.587,4.05 -6.175,6.171c-3.029,4.267 -5.133,8.746 -7.158,13.225c-1.996,4.488 -3.759,9.029 -5.246,13.684c0.571,1.587 0.571,1.587 1.142,0.508c5.025,-8.15 10.295,-16.504 16.591,-22.958c1.525,-1.534 3.313,-2.975 4.567,-3.38l0.1,0.063c0.112,0.187 0.437,0.533 0.617,0.867c1.783,2.729 2.608,7.191 3.358,11.937c0.446,2.417 0.771,4.95 1.837,8.029c0.6,1.538 1.321,3.338 3.188,5.221c1.817,1.917 5.162,3.171 7.679,3.054c2.575,-0.083 4.308,-0.716 6.021,-1.416c1.987,-0.921 3.425,-2.113 4.612,-3.2c2.275,-2.263 3.721,-4.325 5.034,-6.23c2.683,-3.791 4.687,-6.454 7.737,-7.904c3.117,-1.525 7.859,-1.225 12.792,-0.45l0.592,-1.104Z" style="fill:#fff;"></path>
         </symbol>
     </svg>
-    <template id="history-item">
-        <div class="history__item">
-            <div class="history__item__image">
+    <template id="historyTemplate">
+        <div class="history">
+            <item v-for="item in items" v-bind:instruction="item.instruction" :key="item.instruction" v-on:itemselected="onItemSelected"></item>
+            <placeholder v-for="placeholder in placeholders" :key="placeholder.index"></placeholder>
+        </div>
+    </template>
+    <template id="itemTemplate">
+        <div class="history__item" v-on:click="select">
+            <div class="history__item__image" ref="imagediv">
                 <div class="history__item__text-overlay">
-                    <div class="history__item__title">
-
-                    </div>
+                    <div class="history__item__title">{{title}}</div>
                 </div>
             </div>
         </div>
     </template>
-    <template id="placeholder-item">
+    <template id="placeholderTemplate">
         <div class="history__item placeholder__item">
             <div class="placeholder__item__wrapper">
                 <svg xmlns="http://www.w3.org/2000/svg" width="33" height="33" viewBox="0 0 24 24">
@@ -100,12 +104,12 @@
             </div>
         </div>
     </template>
-    <div class="main-wrapper" id="main">
+    <div class="main-wrapper" v-bind:class="{'history-shown':historyShown}" id="main">
         <div class="background">
             <div class="background__image"><canvas id="main_canvas"/></div>
         </div>
         <div class="content">
-            <span class="content__arrow" title="Show History"><div class="content__arrow__hint"><span>Recent Imagery</span></div>
+            <span class="content__arrow" title="Show History" v-on:click="showHistory"><div class="content__arrow__hint"><span>Recent Imagery</span></div>
             <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 48 48">
                 <path d="M14.83 16.42L24 25.59l9.17-9.17L36 19.25l-12 12-12-12z" />
             </svg>
@@ -155,7 +159,7 @@
                 </div>
             </div>
         </div>
-        <div class="history" data-offline="It seems that you are offline. The History does not work in offline mode."></div>
+        <history v-bind:instructions="historyList" v-on:itemselected="onItemSelected"></history>
         <div class="overlay overlay--changes">
             <div class="overlay__content">
                 <div class="overlay__content__close overlay__content__close--dark">

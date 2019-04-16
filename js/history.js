@@ -4,8 +4,11 @@ var f = function(require){
 		addPaintingInstruction: function(instruction){
 			var historyList = storage.getItem("historyList") || [];
 			historyList.push(instruction);
-			historyList = historyList.slice(-10);
+			historyList.splice(0, Math.max(0, historyList.length - 10));
 			storage.setItem("historyList", historyList);
+		},
+		getAll:function(){
+			return storage.getItem("historyList");
 		}
 	};
 
