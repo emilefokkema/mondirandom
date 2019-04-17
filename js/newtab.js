@@ -3,7 +3,7 @@ var f = function(require){
 	var CanvasWithSize = require("./canvas-with-size");
 	var configProvider = require("./config-provider");
 	var history = require("./history");
-	var Vue = require("vue");
+	var Vue = require("../node_modules/vue/dist/vue");
 
 	new Vue({
 		el: "#main",
@@ -170,10 +170,5 @@ if(typeof module !== "undefined" && typeof require == "function"){
 	module.exports = f(require);
 }
 else if(typeof define == "function" && typeof requirejs !== "undefined"){
-	requirejs.config({
-		paths:{
-			vue:["../node_modules/vue/dist/vue"]
-		}
-	});
 	define(f);
 }
