@@ -106,7 +106,7 @@
     </template>
     <div class="main-wrapper" v-bind:class="{'history-shown':historyShown}" id="main">
         <div class="background">
-            <div class="background__image"><canvas id="main_canvas"/></div>
+            <div class="background__image" ref="backgroundDiv"></div>
         </div>
         <div class="content">
             <span class="content__arrow" title="Show History" v-on:click="showHistory"><div class="content__arrow__hint"><span>Recent Imagery</span></div>

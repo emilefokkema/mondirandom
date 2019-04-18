@@ -23,7 +23,9 @@ var f = function(require){
 		methods:{
 			onItemSelected:function(data){
 				var instruction = Instruction.parse(data.instruction);
-				this.getCanvas().displayMondirandom(instruction);
+				var canvas = this.getCanvas();
+				canvas.displayMondirandom(instruction);
+				this.displayMondirandom(canvas);
 				this.instruction = instruction;
 			},
 			showHistory:function(){
@@ -46,8 +48,13 @@ var f = function(require){
 				this.$refs.deepLinkInput.select();
 				document.execCommand('copy');
 			},
+			displayMondirandom:function(canvas){
+				this.$refs.backgroundDiv.style.backgroundImage = "url("+canvas.toDataURL()+")";
+			},
 			getCanvas:function(){
-				return new CanvasWithSize(document.getElementById("main_canvas"), window.innerWidth, window.innerHeight);
+				var rect = this.$refs.backgroundDiv.getBoundingClientRect();
+				var canvasElement = document.createElement("canvas");
+				return new CanvasWithSize(canvasElement, rect.width, rect.height);
 			},
 			closeOverlay:function(event){
 				if (event.target === this.$refs.overlay || event.target === this.$refs.overlayClose) {
@@ -57,7 +64,9 @@ var f = function(require){
 		},
 		mounted:function(){
 			var self = this;
-			this.instruction = this.getCanvas().createMondirandom(configProvider.getConfig());
+			var canvas = this.getCanvas();
+			this.instruction = canvas.createMondirandom(configProvider.getConfig());
+			this.displayMondirandom(canvas);
 			history.addPaintingInstruction(this.instruction.toString());
 			window.addEventListener("click", function(event){
 				if (event.target.className !== 'content') {

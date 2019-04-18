@@ -3,6 +3,7 @@ var f = function(require){
 	var RandomValueProvider = require("./random-value-provider");
 
 	var CanvasWithSize = function(canvasElement, width, height){
+		this.canvasElement = canvasElement;
 		canvasElement.setAttribute("width", width);
 		canvasElement.setAttribute("height", height);
 		this.width = width;
@@ -24,6 +25,9 @@ var f = function(require){
 		splitter.splitAndColor(instruction.getValueProvider(), instruction.numberOfSplits);
 		this.fitDrawingOfSize(instruction.width, instruction.height);
 		splitter.draw(this.context);
+	};
+	CanvasWithSize.prototype.toDataURL = function(){
+		return this.canvasElement.toDataURL();
 	};
 
 	return CanvasWithSize;
