@@ -104,6 +104,33 @@
             </div>
         </div>
     </template>
+    <template id="menu-template">
+        <div class="menu" v-bind:class="{'menu--closed':!open}" v-on:mouseover="doOpen" v-on:mouseout="doClose">
+            <a class="menu__toggle" href="#" title="Menu">
+                <svg class="icon icon-menu " xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="#menu"></use>
+                </svg>
+            </a>
+            <div class="menu__content">
+                <a class="menu__item chrome-only" href="chrome://apps/" v-on:click="handleClick">
+                    <svg class="icon icon-apps " xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="#apps"></use>
+                    </svg><span>Show Apps</span></a>
+                <a class="menu__item chrome-only" href="chrome-search://local-ntp/local-ntp.html" v-on:click="handleClick">
+                    <svg class="icon icon-tab " xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="#tab"></use>
+                    </svg><span>Open Default Tab</span></a>
+                <a class="menu__item menu__item--download" href="#download" target="_blank" data-type="link" v-on:click="handleDownloadClick">
+                    <svg class="icon icon-download " xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="#download"></use>
+                    </svg><span>Download Wallpaper</span></a>
+                <a class="menu__item menu__item--gallery" href="https://emilefokkema.github.io/mondirandom" target="_blank" data-type="link" v-on:click="handleClick">
+                    <svg class="icon icon-photo-library " xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="#photo-library"></use>
+                    </svg><span>Visit Web Gallery</span></a>
+            </div>
+        </div>
+    </template>
     <div class="main-wrapper" v-bind:class="{'history-shown':historyShown}" id="main">
         <div class="background">
             <div class="background__image" ref="backgroundDiv"></div>
@@ -115,35 +142,7 @@
             </svg>
             </span>
         </div>
-        <div class="menu menu--closed">
-            <a class="menu__toggle" href="#" title="Menu">
-                <svg class="icon icon-menu " xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="#menu"></use>
-                </svg>
-            </a>
-            <div class="menu__content">
-                <a class="menu__item chrome-only" href="chrome://apps/">
-                    <svg class="icon icon-apps " xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="#apps"></use>
-                    </svg><span>Show Apps</span></a>
-                <a class="menu__item chrome-only" href="chrome-search://local-ntp/local-ntp.html">
-                    <svg class="icon icon-tab " xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="#tab"></use>
-                    </svg><span>Open Default Tab</span></a>
-                <a class="menu__item menu__item--maps" data-type="link" href="#" title="" target="_blank">
-                    <svg class="icon icon-earth " xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="#earth"></use>
-                    </svg><span></span></a>
-                <a class="menu__item menu__item--download" href="#" target="_blank" data-type="link">
-                    <svg class="icon icon-download " xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="#download"></use>
-                    </svg><span>Download Wallpaper</span></a>
-                <a class="menu__item menu__item--gallery" href="https://g.co/ev" target="_blank" data-type="link">
-                    <svg class="icon icon-photo-library " xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="#photo-library"></use>
-                    </svg><span>Visit Web Gallery</span></a>
-            </div>
-        </div>
+        <linkmenu v-on:downloadimage="downloadImage"></linkmenu>
         <share v-bind:sharelink="shareLink" v-on:sharedeeplink="shareDeeplink"></share>
         <div class="share__deeplink overlay" v-bind:class="{'overlay--active':deepLinkOverlayActive}" ref="overlay" v-on:click="closeOverlay">
             <div class="share__deeplink__content overlay__content">

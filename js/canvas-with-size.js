@@ -26,8 +26,8 @@ var f = function(require){
 		this.fitDrawingOfSize(instruction.width, instruction.height);
 		splitter.draw(this.context);
 	};
-	CanvasWithSize.prototype.toDataURL = function(){
-		return this.canvasElement.toDataURL();
+	CanvasWithSize.prototype.toDataURL = function(type){
+		return this.canvasElement.toDataURL(type);
 	};
 
 	return CanvasWithSize;

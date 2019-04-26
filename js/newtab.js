@@ -4,6 +4,32 @@ var f = function(require){
 	var configProvider = require("./config-provider");
 	var history = require("./history");
 	var Vue = require("../node_modules/vue/dist/vue");
+	var determineBrowser = function(){
+		const userAgent = navigator.userAgent;
+		let browserName = null;
+
+		if (userAgent.match(/Chrome/i)) {
+		  browserName = 'chrome';
+		}
+		if (userAgent.match(/Firefox/i)) {
+		  browserName = 'firefox';
+		}
+
+		if (browserName) {
+		  document.body.classList.add(`browser--${browserName}`);
+		}
+	};
+	var downloadDataUrlWithName = function(dataUrl, name){
+		var a = document.createElement('a');
+		var event = new MouseEvent('click',{});
+		a.setAttribute('href',dataUrl);
+		a.setAttribute('download',name);
+		document.body.appendChild(a);
+		a.dispatchEvent(event);
+		document.body.removeChild(a);
+	};
+
+	determineBrowser();
 
 	new Vue({
 		el: "#main",
@@ -21,6 +47,11 @@ var f = function(require){
 			}
 		},
 		methods:{
+			downloadImage:function(){
+				var canvas = this.getCanvas();
+				canvas.displayMondirandom(this.instruction);
+				downloadDataUrlWithName(canvas.toDataURL("image/png"), "mondirandom.png");
+			},
 			onItemSelected:function(data){
 				var instruction = Instruction.parse(data.instruction);
 				var canvas = this.getCanvas();
@@ -170,6 +201,53 @@ var f = function(require){
 						template:document.getElementById("itemTemplate").innerHTML
 					}
 				}
+			},
+			'linkmenu':{
+				data:function(){
+					return {
+						open:false,
+						timer:undefined
+					};
+				},
+				methods:{
+					openNewTab:function(url){
+						chrome.tabs.create({
+						  url
+						});
+					},
+					updateTabLocation:function(url){
+						chrome.tabs.update({
+						  url
+						});
+					},
+					handleDownloadClick:function(event){
+						this.$emit("downloadimage");
+						event.preventDefault();
+					},
+					handleClick:function(event){
+						const target = event.currentTarget;
+						const url = target.href;
+
+						if (target.href && (window.chrome && chrome.tabs)) {
+							if (target.target === '_blank') {
+								this.openNewTab(url);
+							} else {
+								this.updateTabLocation(url);
+							}
+
+							event.preventDefault();
+						}
+					},
+					doOpen:function(){
+						clearTimeout(this.timer);
+						this.timer = setTimeout(() => {this.open = true;}, 50);
+					},
+					doClose:function(){
+						clearTimeout(this.timer);
+						this.timer = setTimeout(() => {this.open = false;}, 50);
+					}
+				},
+				template:document.getElementById("menu-template").innerHTML
 			}
 		}
 	});
