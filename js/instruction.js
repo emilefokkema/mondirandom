@@ -53,7 +53,7 @@ var f = function(require){
 	};
 	Instruction.parse = function(str){
 		var readable = base64.decode(str);
-		var match = readable.match(/^(\d+);(\d+);(\d+);(\d+);(\d+(?:,\d+)*);([01]+);([rbwyz]+);(\d+(?:,\d+)*)$/);
+		var match = readable.match(/^(\d+(?:\.\d+)?);(\d+(?:\.\d+)?);(\d+);(\d+);(\d+(?:,\d+)*);([01]+);([rbwyz]+);(\d+(?:,\d+)*)$/);
 		var intParser = function(x){return parseInt(x);};
 		var width = parseInt(match[1]),
 			height = parseInt(match[2]),

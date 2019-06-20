@@ -20,7 +20,7 @@ if (!fs.existsSync(dir)){
 fs.copyFile('manifest.json', 'dist/manifest.json', (err) => {
   if (err) throw err;
 });
-fs.copyFile('index.css', 'dist/index.css', (err) => {
+fs.copyFile('newtab.css', 'dist/newtab.css', (err) => {
   if (err) throw err;
 });
 fs.readFile('newtab.html', function(err, buf){
