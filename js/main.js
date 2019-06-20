@@ -1,28 +1,21 @@
 var f = function(require){
+	var Vue = require("vue");
 	var Instruction = require("./instruction");
-	var CanvasWithSize = require("./canvas-with-size");
-	var FieldSplitter = require("./field-splitter");
-
-	var draw = function(width, height, canvasElement){
-		var canvas = new CanvasWithSize(canvasElement, width, height);
-		var queryStringParams = new URLSearchParams(window.location.search);
-		var i = queryStringParams.get("i");
-		if(i){
-			var instruction = Instruction.parse(i);
-			var splitter = new FieldSplitter(instruction.width, instruction.height, {borderThickness: instruction.borderThickness});
-			splitter.splitAndColor(instruction.getValueProvider(), instruction.numberOfSplits);
-			canvas.fitDrawingOfSize(instruction.width, instruction.height);
-			splitter.draw(canvas.context);
-			return;
-		}
-	};
-
-	draw(window.innerWidth, window.innerHeight, document.getElementById("canvas"));
 }
 
 if(typeof module !== "undefined" && typeof require == "function"){
 	module.exports = f(require);
 }
 else if(typeof define == "function" && typeof requirejs !== "undefined"){
+	requirejs.config({
+	    //To get timely, correct error triggers in IE, force a define/shim exports check.
+	    //enforceDefine: true,
+	    paths: {
+	        vue: [
+	            //'https://cdn.jsdelivr.net/npm/vue/dist/vue'
+	            'https://cdn.jsdelivr.net/npm/vue?a'
+	        ]
+	    }
+	});
 	define(f);
 }
