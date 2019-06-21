@@ -38,6 +38,48 @@
 </head>
 
 <body class="page">
+	<template id="menu-template">
+		<div class="menu">
+		  <button title="Menu" class="menu__toggle">
+		    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-menu ">
+		      <use xlink:href="#menu"></use>
+		    </svg>
+		  </button>
+
+		  <div class="menu__content">
+		    <a href="#" class="menu__item" v-on:click="onAboutClick" data-type="link">
+		      <svg xmlns="http://www.w3.org/2000/svg" class="icon">
+		        <use xlink:href="#info"></use>
+		      </svg>
+		      <span>About Mondirandom</span>
+		    </a>
+		    <a href="https://chrome.google.com/webstore/detail/earth-view-from-google-ma/bhloflhklmhfpedakmangadcdofhnnoh" class="menu__item menu__item--install" data-type="link" data-install="true" target="_blank">
+		      <svg xmlns="http://www.w3.org/2000/svg" class="icon">
+		        <use xlink:href="#browser"></use>
+		      </svg>
+		      <span>Add Extension</span>
+		    </a>
+		    <a href="https://chrome.google.com/webstore/detail/earth-view-from-google-ma/bhloflhklmhfpedakmangadcdofhnnoh" class="menu__item menu__item--installed" data-type="link" target="_blank">
+		      <svg xmlns="http://www.w3.org/2000/svg" class="icon">
+		        <use xlink:href="#browser"></use>
+		      </svg>
+		      <span>Extension Details</span>
+		    </a>
+		    <a href="/download/1018.jpg" target="_blank" data-type="link" class="menu__item menu__item--download" download>
+		      <svg xmlns="http://www.w3.org/2000/svg" class="icon ">
+		        <use xlink:href="#download"></use>
+		      </svg>
+		      <span>Download Wallpaper</span>
+		    </a>
+		    <a href="#Leanback" data-type="link" class="menu__item menu__item--leanback">
+		      <svg xmlns="http://www.w3.org/2000/svg" class="icon ">
+		        <use xlink:href="#slideshow"></use>
+		      </svg>
+		      <span>Start Leanback Mode</span>
+		    </a>
+		  </div>
+		</div>
+	</template>
   <div id="main">
   <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
 	    <symbol id="apps" viewBox="0 0 24 24">
@@ -115,46 +157,7 @@
       </a>
     </div>
 
-    <div class="menu">
-      <button title="Menu" class="menu__toggle">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-menu ">
-          <use xlink:href="#menu"></use>
-        </svg>
-      </button>
-
-      <div class="menu__content">
-        <a href="/" class="menu__item" data-method="onAboutClick" data-type="link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon">
-            <use xlink:href="#info"></use>
-          </svg>
-          <span>About Mondirandom</span>
-        </a>
-        <a href="https://chrome.google.com/webstore/detail/earth-view-from-google-ma/bhloflhklmhfpedakmangadcdofhnnoh" class="menu__item menu__item--install" data-type="link" data-install="true" target="_blank">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon">
-            <use xlink:href="#browser"></use>
-          </svg>
-          <span>Add Extension</span>
-        </a>
-        <a href="https://chrome.google.com/webstore/detail/earth-view-from-google-ma/bhloflhklmhfpedakmangadcdofhnnoh" class="menu__item menu__item--installed" data-type="link" target="_blank">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon">
-            <use xlink:href="#browser"></use>
-          </svg>
-          <span>Extension Details</span>
-        </a>
-        <a href="/download/1018.jpg" target="_blank" data-type="link" class="menu__item menu__item--download" download>
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon ">
-            <use xlink:href="#download"></use>
-          </svg>
-          <span>Download Wallpaper</span>
-        </a>
-        <a href="#Leanback" data-type="link" class="menu__item menu__item--leanback">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon ">
-            <use xlink:href="#slideshow"></use>
-          </svg>
-          <span>Start Leanback Mode</span>
-        </a>
-      </div>
-    </div>
+    <linkmenu v-on:about="toggleAbout"></linkmenu>
     <div class="share">
       <a href="https://g.co/ev/1018" target="_blank" data-tooltip="left" data-title="Get link" class="floating-button floating-button--transparent share__deeplink-button">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-share ">
@@ -196,9 +199,9 @@
     </div>
   </div>
 
-  <div class="overlay overlay--about">
+  <div class="overlay overlay--about" v-bind:class="{'overlay--active':aboutActive}" v-on:click="toggleAbout">
     <div class="overlay__content about">
-      <h1 class="about__title">About Earth View</h1>
+      <h1 class="about__title">About Mondirandom</h1>
       <p class="about__body">Earth View is a collection of the most striking and enigmatic landscapes available in Google Earth. The colors, shapes, textures and patterns all contribute to the strange beauty of our planet, reminding us of nature’s uncanny geometry and bewildering simplicity. Each of the 1500 images featured in this collection was hand curated and available for download as wallpaper for your desktop or mobile.</p>
     </div>
   </div>

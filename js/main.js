@@ -43,7 +43,7 @@ var f = function(require){
 		el:"#main",
 		data:function(){
 			return {
-				
+				aboutActive:false
 			};
 		},
 		methods:{
@@ -57,6 +57,9 @@ var f = function(require){
 				var rect = this.$refs.backgroundDiv.getBoundingClientRect();
 				var canvasElement = document.createElement("canvas");
 				return new CanvasWithSize(canvasElement, rect.width, rect.height);
+			},
+			toggleAbout:function(){
+				this.aboutActive = !this.aboutActive;
 			}
 		},
 		mounted:function(){
@@ -72,6 +75,16 @@ var f = function(require){
 				toggleClass(document.body, "page--home", true);
 			}
 			this.displayMondirandom(canvas);
+		},
+		components:{
+			'linkmenu':{
+				template:document.getElementById("menu-template").innerHTML,
+				methods:{
+					onAboutClick:function(){
+						this.$emit("about");
+					}
+				}
+			}
 		}
 	});
 }
