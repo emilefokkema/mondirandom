@@ -2,6 +2,7 @@ var f = function(require){
 	var Vue = require("vue");
 	var CanvasWithSize = require("./canvas-with-size");
 	var Instruction = require("./instruction");
+	var Slide = require("./slide");
 	var configProvider = require("./config-provider");
 	var determineBrowser = function(){
 		const userAgent = navigator.userAgent;
@@ -43,7 +44,8 @@ var f = function(require){
 		el:"#main",
 		data:function(){
 			return {
-				aboutActive:false
+				aboutActive:false,
+				slide: undefined
 			};
 		},
 		methods:{
@@ -60,21 +62,38 @@ var f = function(require){
 			},
 			toggleAbout:function(){
 				this.aboutActive = !this.aboutActive;
+			},
+			createInstruction:function(){
+				return this.getCanvas().createMondirandom(configProvider.getConfig());;
+			},
+			displaySlide:function(slide){
+				var instruction = slide.content;
+				var canvas = this.getCanvas();
+				canvas.displayMondirandom(instruction);
+				this.displayMondirandom(canvas);
+			},
+			moveNextSlide:function(){
+				this.slide = this.slide.next();
+				this.displaySlide(this.slide);
+			},
+			movePreviousSlide:function(){
+				this.slide = this.slide.previous();
+				this.displaySlide(this.slide);
 			}
 		},
 		mounted:function(){
-			var instruction;
+			var slide;
 			var queryStringParams = new URLSearchParams(window.location.search);
-			var canvas = this.getCanvas();
 			var i = queryStringParams.get("i");
 			if(i){
-				instruction = Instruction.parse(i);
-				canvas.displayMondirandom(instruction);
+				var instruction = Instruction.parse(i);
+				slide = new Slide(instruction, this.createInstruction);
 			}else{
-				instruction = canvas.createMondirandom(configProvider.getConfig());
+				slide = new Slide(undefined, this.createInstruction);
 				toggleClass(document.body, "page--home", true);
 			}
-			this.displayMondirandom(canvas);
+			this.displaySlide(slide);
+			this.slide = slide;
 		},
 		components:{
 			'linkmenu':{
