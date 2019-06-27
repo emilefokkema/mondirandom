@@ -194,6 +194,7 @@ var f = function(require){
 							var canvasElement = document.createElement("canvas");
 							var canvas = new CanvasWithSize(canvasElement, rect.width, rect.height);
 							var parsedInstruction = Instruction.parse(this.instruction);
+							this.title = parsedInstruction.getTitle();
 							canvas.displayMondirandom(parsedInstruction);
 							var dataUrl = canvasElement.toDataURL();
 							div.style.backgroundImage = "url("+dataUrl+")";
