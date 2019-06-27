@@ -71,6 +71,7 @@ var f = function(require){
 				var canvas = this.getCanvas();
 				canvas.displayMondirandom(instruction);
 				this.displayMondirandom(canvas);
+				window.history.pushState(null, "", "?i="+instruction.toString());
 			},
 			moveNextSlide:function(){
 				this.slide = this.slide.next();
