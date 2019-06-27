@@ -75,6 +75,7 @@ var f = function(require){
 				if(pushState){
 					window.history.pushState(slide.toJSON(), "", "?i="+slide.content);
 				}
+				document.title = instruction.getTitle();
 			},
 			moveNextSlide:function(){
 				this.displaySlide(this.slide.next(), true);
