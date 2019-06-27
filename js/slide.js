@@ -14,6 +14,30 @@ var f = function(require){
 		this._next = next;
 		return next;
 	};
+	Slide.prototype.create = function(content){
+		if(this._next){
+			return this._next.create(content);
+		}
+		var next = new Slide(content, this.getContent);
+		next.setPrevious(this);
+		this._next = next;
+		return next;
+	};
+	Slide.prototype.find = function(matchContent, alreadySearched){
+		if(matchContent(this.content)){
+			return this;
+		}
+		if(this._next && alreadySearched !== this._next){
+			var nextResult = this._next.find(matchContent, this);
+			if(nextResult){
+				return nextResult;
+			}
+		}
+		if(this._previous && alreadySearched !== this._previous){
+			return this._previous.find(matchContent, this);
+		}
+		return undefined;
+	};
 	Slide.prototype.setPrevious = function(previous){
 		this._previous = previous;
 	};
@@ -28,6 +52,9 @@ var f = function(require){
 	};
 	Slide.prototype.setNext = function(next){
 		this._next = next;
+	};
+	Slide.prototype.toJSON = function(){
+		return {content:this.content};
 	};
 	return Slide;
 }

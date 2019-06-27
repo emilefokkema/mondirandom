@@ -64,37 +64,45 @@ var f = function(require){
 				this.aboutActive = !this.aboutActive;
 			},
 			createInstruction:function(){
-				return this.getCanvas().createMondirandom(configProvider.getConfig());;
+				return this.getCanvas().createMondirandom(configProvider.getConfig()).toString();
 			},
-			displaySlide:function(slide){
-				var instruction = slide.content;
+			displaySlide:function(slide, pushState){
+				this.slide = slide;
+				var instruction = Instruction.parse(slide.content);
 				var canvas = this.getCanvas();
 				canvas.displayMondirandom(instruction);
 				this.displayMondirandom(canvas);
-				window.history.pushState(null, "", "?i="+instruction.toString());
+				if(pushState){
+					window.history.pushState(slide.toJSON(), "", "?i="+slide.content);
+				}
 			},
 			moveNextSlide:function(){
-				this.slide = this.slide.next();
-				this.displaySlide(this.slide);
+				this.displaySlide(this.slide.next(), true);
 			},
 			movePreviousSlide:function(){
-				this.slide = this.slide.previous();
-				this.displaySlide(this.slide);
+				this.displaySlide(this.slide.previous(), true);
 			}
 		},
 		mounted:function(){
+			var self = this;
 			var slide;
 			var queryStringParams = new URLSearchParams(window.location.search);
 			var i = queryStringParams.get("i");
 			if(i){
-				var instruction = Instruction.parse(i);
-				slide = new Slide(instruction, this.createInstruction);
+				slide = new Slide(i, this.createInstruction);
 			}else{
 				slide = new Slide(undefined, this.createInstruction);
 				toggleClass(document.body, "page--home", true);
 			}
-			this.displaySlide(slide);
-			this.slide = slide;
+			this.displaySlide(slide, true);
+			window.addEventListener("popstate", function(event){
+				var eventContent = event.state && event.state.content;
+				if(!eventContent){
+					return;
+				}
+				var foundSlide = self.slide.find(function(content){return content === eventContent;}) || self.slide.create(eventContent);
+				self.displaySlide(foundSlide);
+			});
 		},
 		components:{
 			'linkmenu':{
