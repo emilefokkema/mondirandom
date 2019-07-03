@@ -18,6 +18,43 @@ describe("a slide", function(){
 		expect(newOne.content).toBe(42);
 		expect(newOne.previous()).toBe(last);
 	});
+	
+	describe("that has a max size", function(){
+		var maxSize = 3;
+		
+		beforeEach(function(){
+			instance = new Slide(undefined, getContent, maxSize);
+		});
+		
+		it("should not remember more than so many previouses", function(){
+			var first = instance;
+			var second = first.next();
+			var third = second.next();
+			var fourth = third.next();
+			
+			var thirdRemembered = fourth.previous();
+			expect(thirdRemembered).toBe(third);
+			var secondRemembered = thirdRemembered.previous();
+			expect(secondRemembered).toBe(second);
+			var secondRememberedPrevious = secondRemembered.previous();
+			expect(secondRememberedPrevious).not.toBe(first);
+		});
+		
+		it("should not remember more than so many nexts", function(){
+			var first = instance;
+			var second = first.previous();
+			var third = second.previous();
+			var fourth = third.previous();
+			
+			var thirdRemembered = fourth.next();
+			expect(thirdRemembered).toBe(third);
+			var secondRemembered = thirdRemembered.next();
+			expect(secondRemembered).toBe(second);
+			var secondRememberedNext = secondRemembered.next();
+			expect(secondRememberedNext).not.toBe(first);
+		});
+		
+	});
 
 	describe("that has a previous with a certain content", function(){
 		var previous, previousContent;
