@@ -128,5 +128,29 @@ describe("a slide", function(){
 			expect(contents).toEqual([0, 1, 2, 3, 4]);
 		});
 	});
+
+	describe("that is created from a list of contents", function(){
+
+		beforeEach(function(){
+			instance = Slide.fromContents([0, 1, 2, 3], getContent);
+		});
+
+		it("should get all contents", function(){
+			var contents = instance.getAllContents();
+			expect(contents).toEqual([0, 1, 2, 3]);
+		});
+	});
+
+	describe("with a max length that is created from a list of contents", function(){
+
+		beforeEach(function(){
+			instance = Slide.fromContents([0, 1, 2, 3], getContent, 3);
+		});
+
+		it("should get all contents", function(){
+			var contents = instance.getAllContents();
+			expect(contents).toEqual([1, 2, 3]);
+		});
+	});
 	
 });

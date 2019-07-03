@@ -1,6 +1,6 @@
 var f = function(require){
 	var Slide = function(content, getContent, maxLength){
-		this.content = content || getContent();
+		this.content = content === undefined ? getContent() : content;
 		this.getContent = getContent;
 		this._next = undefined;
 		this._previous = undefined;
@@ -68,9 +68,10 @@ var f = function(require){
 		if(this._next){
 			return this._next.create(content);
 		}
-		var next = new Slide(content, this.getContent);
+		var next = new Slide(content, this.getContent, this.maxLength);
 		next.setPrevious(this);
 		this._next = next;
+		next.ensureMaxLength(this.maxLength);
 		return next;
 	};
 	Slide.prototype.find = function(matchContent, alreadySearched){
@@ -96,6 +97,16 @@ var f = function(require){
 	};
 	Slide.prototype.toJSON = function(){
 		return {content:this.content};
+	};
+	Slide.fromContents = function(contents, getContent, maxLength){
+		if(!contents || !contents.length){
+			return null;
+		}
+		var result = new Slide(contents[0], getContent, maxLength);
+		for(var i=1;i<contents.length;i++){
+			result = result.create(contents[i]);
+		}
+		return result;
 	};
 	return Slide;
 }
