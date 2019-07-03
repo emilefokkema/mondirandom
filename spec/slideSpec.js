@@ -114,5 +114,19 @@ describe("a slide", function(){
 		});
 	});
 
+	describe("that has some previous and some next", function(){
+
+		beforeEach(function(){
+			var getCountingContent = (function(counter){return function(){return counter++;};})(0);
+			instance = new Slide(undefined, getCountingContent);
+			instance = instance.next().next();
+			instance.next().next();
+		});
+
+		it("should get all contents", function(){
+			var contents = instance.getAllContents();
+			expect(contents).toEqual([0, 1, 2, 3, 4]);
+		});
+	});
 	
 });

@@ -16,6 +16,21 @@ var f = function(require){
 		next.ensureMaxLength(this.maxLength);
 		return next;
 	};
+	Slide.prototype.getAllContents = function(origin){
+		if(!origin){
+			var previousContents = this._previous ? this._previous.getAllContents(this) : [];
+			var nextContents = this._next ? this._next.getAllContents(this) : [];
+			return previousContents.concat([this.content]).concat(nextContents);
+		}
+		var result = [this.content];
+		if(this._next && this._next !== origin){
+			return result.concat(this._next.getAllContents(this));
+		}
+		if(this._previous && this._previous !== origin){
+			return this._previous.getAllContents(this).concat(result);
+		}
+		return result;
+	};
 	Slide.prototype.previous = function(){
 		if(this._previous){
 			return this._previous;
