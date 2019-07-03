@@ -73,16 +73,6 @@ var f = function(require){
 		this._next = next;
 		return next;
 	};
-	Slide.prototype.getLength = function(origin){
-		var count = 1;
-		if(this._next && this._next !== origin){
-			count += this._next.getLength(this);
-		}
-		if(this._previous && this._previous !== origin){
-			count += this._previous.getLength(this);
-		}
-		return count;
-	};
 	Slide.prototype.find = function(matchContent, alreadySearched){
 		if(matchContent(this.content)){
 			return this;
