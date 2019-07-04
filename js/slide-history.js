@@ -10,8 +10,18 @@ var f = function(require){
 	SlideHistory.prototype.getContents = function(){
 		return this.storage.getItem("slides");
 	};
-	SlideHistory.prototype.findOrCreateSlideWithContent = function(){
-
+	SlideHistory.prototype.findOrCreateSlideWithContent = function(content){
+		var slide, contents = this.getContents();
+		if(contents && contents.length){
+			slide = Slide.fromContents(contents, this.getNewSlideContent);
+			var found = slide.find(function(c){return c === content;});
+			if(found){
+				return found;
+			}
+		}
+		slide = new Slide(content, this.getNewSlideContent);
+		this.storeContents(slide.getAllContents());
+		return slide;
 	};
 	return SlideHistory;
 }
