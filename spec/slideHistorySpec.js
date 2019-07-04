@@ -20,12 +20,19 @@ describe("a slide history", function(){
 		expect(result.next().content).toBe(4);
 	});
 	
-		it("should create slide with nonexistent content", function(){
+	it("should create slide with nonexistent content", function(){
 		storage.setItem("slides", [1, 2, 3, 4]);
 		var result = instance.findOrCreateSlideWithContent(5);
 		expect(result).toBeTruthy();
 		expect(result.content).toBe(5);
 		var newSlides = storage.getItem("slides");
 		expect(newSlides).toEqual([5]);
+	});
+
+	it("should reflect the creation of new slides", function(){
+		storage.setItem("slides", []);
+		var slide = instance.findOrCreateSlideWithContent(content);
+		slide.next().previous().previous();
+		expect(storage.getItem("slides")).toEqual([content, content, content]);
 	});
 });

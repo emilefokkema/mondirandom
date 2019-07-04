@@ -1,19 +1,21 @@
 var f = function(require){
-	var Slide = function(content, getContent, maxLength){
+	var Slide = function(content, getContent, maxLength, onSlideCreated){
 		this.content = content === undefined ? getContent() : content;
 		this.getContent = getContent;
 		this._next = undefined;
 		this._previous = undefined;
 		this.maxLength = maxLength;
+		this.onSlideCreated = onSlideCreated || function(){};
 	};
 	Slide.prototype.next = function(){
 		if(this._next){
 			return this._next;
 		}
-		var next = new Slide(undefined, this.getContent, this.maxLength);
+		var next = new Slide(undefined, this.getContent, this.maxLength, this.onSlideCreated);
 		next.setPrevious(this);
 		this._next = next;
 		next.ensureMaxLength(this.maxLength);
+		this.onSlideCreated(next);
 		return next;
 	};
 	Slide.prototype.getAllContents = function(origin){
@@ -35,10 +37,11 @@ var f = function(require){
 		if(this._previous){
 			return this._previous;
 		}
-		var previous = new Slide(undefined, this.getContent, this.maxLength);
+		var previous = new Slide(undefined, this.getContent, this.maxLength, this.onSlideCreated);
 		previous.setNext(this);
 		this._previous = previous;
 		previous.ensureMaxLength(this.maxLength);
+		this.onSlideCreated(previous);
 		return previous;
 	};
 	Slide.prototype.destroy = function(){
@@ -68,10 +71,11 @@ var f = function(require){
 		if(this._next){
 			return this._next.create(content);
 		}
-		var next = new Slide(content, this.getContent, this.maxLength);
+		var next = new Slide(content, this.getContent, this.maxLength, this.onSlideCreated);
 		next.setPrevious(this);
 		this._next = next;
 		next.ensureMaxLength(this.maxLength);
+		this.onSlideCreated(next);
 		return next;
 	};
 	Slide.prototype.find = function(matchContent, alreadySearched){
@@ -98,11 +102,11 @@ var f = function(require){
 	Slide.prototype.toJSON = function(){
 		return {content:this.content};
 	};
-	Slide.fromContents = function(contents, getContent, maxLength){
+	Slide.fromContents = function(contents, getContent, maxLength, onSlideCreated){
 		if(!contents || !contents.length){
 			return null;
 		}
-		var result = new Slide(contents[0], getContent, maxLength);
+		var result = new Slide(contents[0], getContent, maxLength, onSlideCreated);
 		for(var i=1;i<contents.length;i++){
 			result = result.create(contents[i]);
 		}
