@@ -4,6 +4,8 @@ var f = function(require){
 	var Instruction = require("./instruction");
 	var Slide = require("./slide");
 	var configProvider = require("./config-provider");
+	var storage = require("./storage");
+	var SlideHistory = require("./slide-history");
 	var determineBrowser = function(){
 		const userAgent = navigator.userAgent;
 		let browserName = null;
@@ -45,7 +47,8 @@ var f = function(require){
 		data:function(){
 			return {
 				aboutActive:false,
-				slide: undefined
+				slide: undefined,
+				config: undefined
 			};
 		},
 		methods:{
@@ -64,7 +67,7 @@ var f = function(require){
 				this.aboutActive = !this.aboutActive;
 			},
 			createInstruction:function(){
-				return this.getCanvas().createMondirandom(configProvider.getConfig()).toString();
+				return this.getCanvas().createMondirandom(this.config).toString();
 			},
 			displaySlide:function(slide, pushState){
 				this.slide = slide;
@@ -85,14 +88,16 @@ var f = function(require){
 			}
 		},
 		mounted:function(){
+			this.config = configProvider.getConfig();
+			var history = new SlideHistory(storage, this.createInstruction.bind(this), this.config.historyMaxLength);
 			var self = this;
 			var slide;
 			var queryStringParams = new URLSearchParams(window.location.search);
 			var i = queryStringParams.get("i");
 			if(i){
-				slide = new Slide(i, this.createInstruction);
+				slide = history.findOrCreateSlideWithContent(i);
 			}else{
-				slide = new Slide(undefined, this.createInstruction);
+				slide = history.findOrCreateSlide();
 				toggleClass(document.body, "page--home", true);
 			}
 			this.displaySlide(slide, true);

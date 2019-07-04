@@ -2,6 +2,7 @@ var f = function(require){
 	var configProvider = {
 		getConfig: function(){
 			return {
+				historyMaxLength: 50,
 				numberOfSplits: 40,
 				borderThickness: 5,
 				random: {
