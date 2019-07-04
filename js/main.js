@@ -54,6 +54,7 @@ var f = function(require){
 		methods:{
 			explore:function(){
 				toggleClass(document.body, "page--home", false);
+				this.replaceHistoryWithCurrentSlide();
 			},
 			displayMondirandom:function(canvas){
 				this.$refs.backgroundDiv.style.backgroundImage = "url("+canvas.toDataURL()+")";
@@ -69,22 +70,27 @@ var f = function(require){
 			createInstruction:function(){
 				return this.getCanvas().createMondirandom(this.config).toString();
 			},
-			displaySlide:function(slide, pushState){
+			displaySlide:function(slide){
 				this.slide = slide;
 				var instruction = Instruction.parse(slide.content);
 				var canvas = this.getCanvas();
 				canvas.displayMondirandom(instruction);
 				this.displayMondirandom(canvas);
-				if(pushState){
-					window.history.pushState(slide.toJSON(), "", "?i="+slide.content);
-				}
 				document.title = instruction.getTitle();
 			},
+			pushCurrentSlideToHistory:function(){
+				window.history.pushState(this.slide.toJSON(), "", "?i="+this.slide.content);
+			},
+			replaceHistoryWithCurrentSlide:function(){
+				window.history.replaceState(this.slide.toJSON(), "", "?i="+this.slide.content);
+			},
 			moveNextSlide:function(){
-				this.displaySlide(this.slide.next(), true);
+				this.displaySlide(this.slide.next());
+				this.pushCurrentSlideToHistory();
 			},
 			movePreviousSlide:function(){
-				this.displaySlide(this.slide.previous(), true);
+				this.displaySlide(this.slide.previous());
+				this.pushCurrentSlideToHistory();
 			}
 		},
 		mounted:function(){
@@ -100,7 +106,7 @@ var f = function(require){
 				slide = history.findOrCreateSlide();
 				toggleClass(document.body, "page--home", true);
 			}
-			this.displaySlide(slide, true);
+			this.displaySlide(slide);
 			window.addEventListener("popstate", function(event){
 				var eventContent = event.state && event.state.content;
 				if(!eventContent){
