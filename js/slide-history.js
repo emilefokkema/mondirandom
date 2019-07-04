@@ -15,6 +15,15 @@ var f = function(require){
 		}
 		return undefined;
 	};
+	SlideHistory.prototype.findOrCreateSlide = function(){
+		var slide = this.getSlide();
+		if(slide){
+			return slide;
+		}
+		slide = new Slide(undefined, this.getNewSlideContent, this.maxLength, this.storeSlide.bind(this));
+		this.storeSlide(slide);
+		return slide;
+	};
 	SlideHistory.prototype.findOrCreateSlideWithContent = function(content){
 		var slide = this.getSlide();
 		if(slide){
