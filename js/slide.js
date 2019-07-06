@@ -18,20 +18,40 @@ var f = function(require){
 		this.onSlideCreated(next);
 		return next;
 	};
-	Slide.prototype.getAllContents = function(origin){
-		if(!origin){
-			var previousContents = this._previous ? this._previous.getAllContents(this) : [];
-			var nextContents = this._next ? this._next.getAllContents(this) : [];
-			return previousContents.concat([this.content]).concat(nextContents);
-		}
-		var result = [this.content];
-		if(this._next && this._next !== origin){
-			return result.concat(this._next.getAllContents(this));
-		}
+	Slide.prototype.getAtIndex = function(index){
+		var i = 0;
+		return this.reduce(function(result, slide){
+			i++;
+			if(result.value === undefined && i == index){
+				result.value = slide;
+			}
+			return result;
+		}).value;
+	};
+	Slide.prototype.getAtRandomIndex = function(){
+		var randomIndex = Math.floor(Math.random() * this.getLength());
+		return this.getAtIndex(randomIndex);
+	};
+	Slide.prototype.reduce = function(callback, initialValue, origin){
 		if(this._previous && this._previous !== origin){
-			return this._previous.getAllContents(this).concat(result);
+			initialValue = this._previous.reduce(callback, initialValue, this);
 		}
-		return result;
+		var newValue;
+		if(!this._previous){
+			newValue = initialValue === undefined ? this : callback(initialValue, this);
+		}else{
+			newValue = callback(initialValue, this);
+		}
+		if(this._next && this._next !== origin){
+			return this._next.reduce(callback, newValue, this);
+		}
+		return newValue;
+	};
+	Slide.prototype.getAllContents = function(){
+		return this.reduce(function(contents, slide){contents.push(slide.content);return contents;}, []);
+	};
+	Slide.prototype.getLength = function(){
+		return this.reduce(function(l){return l + 1;}, 0);
 	};
 	Slide.prototype.previous = function(){
 		if(this._previous){
@@ -78,20 +98,13 @@ var f = function(require){
 		this.onSlideCreated(next);
 		return next;
 	};
-	Slide.prototype.find = function(matchContent, alreadySearched){
-		if(matchContent(this.content)){
-			return this;
-		}
-		if(this._next && alreadySearched !== this._next){
-			var nextResult = this._next.find(matchContent, this);
-			if(nextResult){
-				return nextResult;
+	Slide.prototype.find = function(matchContent){
+		return this.reduce(function(result, slide){
+			if(result.value === undefined && matchContent(slide.content)){
+				result.value = slide;
 			}
-		}
-		if(this._previous && alreadySearched !== this._previous){
-			return this._previous.find(matchContent, this);
-		}
-		return undefined;
+			return result;
+		},{value:undefined}).value;
 	};
 	Slide.prototype.setPrevious = function(previous){
 		this._previous = previous;

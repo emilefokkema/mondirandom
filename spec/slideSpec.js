@@ -127,6 +127,16 @@ describe("a slide", function(){
 			var contents = instance.getAllContents();
 			expect(contents).toEqual([0, 1, 2, 3, 4]);
 		});
+
+		it("should have a length", function(){
+			var length = instance.getLength();
+			expect(length).toBe(5);
+		});
+
+		it("should find at index", function(){
+			var at1 = instance.getAtIndex(1);
+			expect(at1.content).toBe(1);
+		});
 	});
 
 	describe("that is created from a list of contents", function(){

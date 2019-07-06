@@ -103,7 +103,7 @@ var f = function(require){
 			if(i){
 				slide = history.findOrCreateSlideWithContent(i);
 			}else{
-				slide = history.findOrCreateSlide();
+				slide = history.findOrCreateSlide().getAtRandomIndex();
 				toggleClass(document.body, "page--home", true);
 			}
 			this.displaySlide(slide);
