@@ -21,12 +21,11 @@ var f = function(require){
 	Slide.prototype.getAtIndex = function(index){
 		var i = 0;
 		return this.reduce(function(result, slide){
-			i++;
-			if(result.value === undefined && i == index){
+			if(i++ == index){
 				result.value = slide;
 			}
 			return result;
-		}).value;
+		},{value:undefined}).value;
 	};
 	Slide.prototype.getAtRandomIndex = function(){
 		var randomIndex = Math.floor(Math.random() * this.getLength());

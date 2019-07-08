@@ -134,8 +134,8 @@ describe("a slide", function(){
 		});
 
 		it("should find at index", function(){
-			var at1 = instance.getAtIndex(1);
-			expect(at1.content).toBe(1);
+			expect(instance.getAtIndex(0).content).toBe(0);
+			expect(instance.getAtIndex(1).content).toBe(1);
 		});
 	});
 
