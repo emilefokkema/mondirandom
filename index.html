@@ -80,6 +80,31 @@
 		  </div>
 		</div>
 	</template>
+	<template id="share-template">
+		<div class="share">
+		  <a href="javascript:void(0)" v-on:click="sharedeeplink" target="_blank" data-tooltip="left" data-title="Get link" class="floating-button floating-button--transparent share__deeplink-button">
+		    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-share ">
+		      <use xlink:href="#share"></use>
+		    </svg>
+		    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-link state-active">
+		      <use xlink:href="#link"></use>
+		    </svg>
+		  </a>
+
+		  <div class="share__links">
+		    <a target="_blank" data-type="share" data-platform="Twitter" v-on:click="shareTwitter" data-tooltip="left" data-title="Tweet" href="#" class="floating-button floating-button--small share__link share__link--twitter">
+		      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-twitter ">
+		        <use xlink:href="#twitter"></use>
+		      </svg>
+		    </a>
+		    <a target="_blank" data-type="share" data-platform="Facebook" v-on:click="shareFacebook" data-tooltip="left" data-title="Like" href="#" class="floating-button floating-button--small share__link share__link--facebook">
+		      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-facebook ">
+		        <use xlink:href="#facebook"></use>
+		      </svg>
+		    </a>
+		  </div>
+		</div>
+	</template>
   <div id="main">
   <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
 	    <symbol id="apps" viewBox="0 0 24 24">
@@ -158,43 +183,22 @@
     </div>
 
     <linkmenu v-on:about="toggleAbout"></linkmenu>
-    <div class="share">
-      <a href="https://g.co/ev/1018" target="_blank" data-tooltip="left" data-title="Get link" class="floating-button floating-button--transparent share__deeplink-button">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-share ">
-          <use xlink:href="#share"></use>
-        </svg>
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-link state-active">
-          <use xlink:href="#link"></use>
-        </svg>
-      </a>
-
-      <div class="share__links">
-        <a target="_blank" data-type="share" data-platform="Twitter" data-tooltip="left" data-title="Tweet" href="https://twitter.com/intent/tweet?text=Enjoy%20this%20Earth%20View%3a&amp;url=https%3a%2f%2fg.co%2fev%2f1018" class="floating-button floating-button--small share__link share__link--twitter">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-twitter ">
-            <use xlink:href="#twitter"></use>
-          </svg>
-        </a>
-        <a target="_blank" data-type="share" data-platform="Facebook" data-tooltip="left" data-title="Like" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fg.co%2fev%2f1018" class="floating-button floating-button--small share__link share__link--facebook">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-facebook ">
-            <use xlink:href="#facebook"></use>
-          </svg>
-        </a>
-      </div>
-    </div>
+    <share v-bind:sharelink="shareLink" v-on:sharedeeplink="shareDeeplink"></share>
   </div>
 
-  <div class="share__deeplink overlay">
+  <div class="share__deeplink overlay" v-bind:class="{'overlay--active': deepLinkOverlayActive}" ref="overlay" v-on:click="closeOverlay">
     <div class="share__deeplink__content overlay__content overlay__content--animate">
-      <div class="overlay__content__close">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-close">
-          <use xlink:href="#close"></use>
-        </svg>
+      <div class="overlay__content__close" ref="overlayClose" v-on:click="closeOverlay">
+        <svg class="icon icon-close " xmlns="http://www.w3.org/2000/svg" ref="svg">
+           <use xlink:href="#close"></use>
+       </svg>
       </div>
       <div class="share__deeplink__image">
-        <img src="#" />
+        <canvas ref="thumbnailCanvas"/>
       </div>
       <div class="share__deeplink__url">
-        <input type="text" name="name" value="">
+        <input type="text" name="name" value="" ref="deepLinkInput">
+        <div class="share__deeplink__copy" v-on:click="copyDeepLink">Copy link</div>
       </div>
     </div>
   </div>

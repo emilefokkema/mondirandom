@@ -48,13 +48,41 @@ var f = function(require){
 			return {
 				aboutActive:false,
 				slide: undefined,
-				config: undefined
+				config: undefined,
+				deepLinkOverlayActive: false
 			};
+		},
+		computed:{
+			shareLink:function(){
+				if(this.slide){
+					return "https://emilefokkema.github.io/mondirandom/?i="+(this.slide.content || "").toString();
+				}
+				
+			}
 		},
 		methods:{
 			explore:function(){
 				toggleClass(document.body, "page--home", false);
 				this.replaceHistoryWithCurrentSlide();
+			},
+			copyDeepLink:function(){
+				this.$refs.deepLinkInput.focus();
+				this.$refs.deepLinkInput.select();
+				document.execCommand('copy');
+			},
+			shareDeeplink:function(){
+				this.deepLinkOverlayActive = true;
+				var instruction = Instruction.parse(this.slide.content);
+				var canvas = new CanvasWithSize(this.$refs.thumbnailCanvas, 440, 250);
+				canvas.displayMondirandom(instruction);
+				this.$refs.deepLinkInput.value = this.shareLink;
+				this.$refs.deepLinkInput.focus();
+				this.$refs.deepLinkInput.select();
+			},
+			closeOverlay:function(event){
+				if (event.target === this.$refs.overlay || event.target === this.$refs.overlayClose || event.target === this.$refs.svg) {
+					this.deepLinkOverlayActive = false;
+				}
 			},
 			displayMondirandom:function(canvas){
 				this.$refs.backgroundDiv.style.backgroundImage = "url("+canvas.toDataURL()+")";
@@ -122,6 +150,32 @@ var f = function(require){
 				methods:{
 					onAboutClick:function(){
 						this.$emit("about");
+					}
+				}
+			},
+			'share':{
+				template:document.getElementById("share-template").innerHTML,
+				props:{
+					sharelink:String
+				},
+				methods:{
+					sharedeeplink:function(){
+						this.$emit("sharedeeplink");
+					},
+					shareUrl:function(url){
+						window.open(
+						  url,
+						  'Share',
+						  'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600'
+						);
+					},
+					shareFacebook:function(){
+						var facebookLink = "https://www.facebook.com/sharer/sharer.php?u="+this.sharelink;
+						this.shareUrl(facebookLink);
+					},
+					shareTwitter:function(){
+						var twitterLink = "https://twitter.com/intent/tweet?text=Enjoy%20this%20Mondirandom%20Painting%3A%20&amp;url="+this.sharelink;
+						this.shareUrl(twitterLink);
 					}
 				}
 			}
