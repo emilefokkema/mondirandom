@@ -25,12 +25,14 @@ var f = function(require){
 	};
 	SlideHistory.prototype.findOrCreateSlide = function(){
 		var sequences = this.storage.getItem("sequences") || [];
+		var slide;
 		if(sequences.length){
-			return this.getSlide(0);
+			slide = this.getSlide(Math.floor(sequences.length * Math.random()));
+		}else{
+			slide = new Slide(undefined, this.getNewSlideContent, this.maxLength, this.getStoreFn(0));
+			this.storeSlide(slide, 0);
 		}
-		slide = new Slide(undefined, this.getNewSlideContent, this.maxLength, this.getStoreFn(0));
-		this.storeSlide(slide, 0);
-		return slide;
+		return slide.getAtRandomIndex();
 	};
 	SlideHistory.prototype.findOrCreateSlideWithContent = function(content){
 		var sequences = this.storage.getItem("sequences") || [];
