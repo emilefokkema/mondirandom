@@ -5,35 +5,43 @@ var f = function(require){
 		this.getNewSlideContent = getNewSlideContent;
 		this.maxLength = maxLength;
 	};
-	SlideHistory.prototype.storeSlide = function(slide){
-		this.storage.setItem("slides", slide.getAllContents());
+	SlideHistory.prototype.storeSlide = function(slide, sequenceIndex){
+		var sequences = this.storage.getItem("sequences") || [];
+		sequences[sequenceIndex] = slide.getAllContents();
+		this.storage.setItem("sequences", sequences);
 	};
-	SlideHistory.prototype.getSlide = function(){
-		var contents = this.storage.getItem("slides");
+	SlideHistory.prototype.getSlide = function(index){
+		var contents = this.storage.getItem("sequences")[index];
 		if(contents && contents.length){
-			return Slide.fromContents(contents, this.getNewSlideContent, this.maxLength, this.storeSlide.bind(this));
+			return Slide.fromContents(contents, this.getNewSlideContent, this.maxLength, this.getStoreFn(index));
 		}
 		return undefined;
 	};
+	SlideHistory.prototype.getStoreFn = function(index){
+		var self = this;
+		return function(slide){
+			self.storeSlide(slide, index);
+		};
+	};
 	SlideHistory.prototype.findOrCreateSlide = function(){
-		var slide = this.getSlide();
-		if(slide){
-			return slide;
+		var sequences = this.storage.getItem("sequences") || [];
+		if(sequences.length){
+			return this.getSlide(0);
 		}
-		slide = new Slide(undefined, this.getNewSlideContent, this.maxLength, this.storeSlide.bind(this));
-		this.storeSlide(slide);
+		slide = new Slide(undefined, this.getNewSlideContent, this.maxLength, this.getStoreFn(0));
+		this.storeSlide(slide, 0);
 		return slide;
 	};
 	SlideHistory.prototype.findOrCreateSlideWithContent = function(content){
-		var slide = this.getSlide();
-		if(slide){
-			var found = slide.find(function(c){return c === content;});
-			if(found){
-				return found;
+		var sequences = this.storage.getItem("sequences") || [];
+		for(var i=0;i<sequences.length;i++){
+			var sequence = sequences[i];
+			if(sequence.find(function(c){return c === content;})){
+				return this.getSlide(i).find(function(c){return c === content;});
 			}
 		}
-		slide = new Slide(content, this.getNewSlideContent, this.maxLength, this.storeSlide.bind(this));
-		this.storeSlide(slide);
+		slide = new Slide(content, this.getNewSlideContent, this.maxLength, this.getStoreFn(sequences.length));
+		this.storeSlide(slide, sequences.length);
 		return slide;
 	};
 	return SlideHistory;

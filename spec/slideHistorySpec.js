@@ -15,7 +15,7 @@ describe("a slide history", function(){
 		var slide;
 
 		beforeEach(function(){
-			storage.setItem("slides", [1, 2, 3, 4]);
+			storage.setItem("sequences", [[1, 2, 3, 4]]);
 			slide = instance.findOrCreateSlideWithContent(3);
 		});
 
@@ -29,7 +29,7 @@ describe("a slide history", function(){
 		it("should reflect the creation of new slides", function(){
 			slide.next().next();
 			slide.previous().previous().previous();
-			expect(storage.getItem("slides")).toEqual([content, 1, 2, 3, 4, content]);
+			expect(storage.getItem("sequences")).toEqual([[content, 1, 2, 3, 4, content]]);
 		});
 	});
 
@@ -38,21 +38,21 @@ describe("a slide history", function(){
 		var slide;
 
 		beforeEach(function(){
-			storage.setItem("slides", [1, 2, 3, 4]);
+			storage.setItem("sequences", [[1, 2, 3, 4]]);
 			slide = instance.findOrCreateSlideWithContent(5);
 		});
 
 		it("should create it", function(){
 			expect(slide).toBeTruthy();
 			expect(slide.content).toBe(5);
-			var newSlides = storage.getItem("slides");
-			expect(newSlides).toEqual([5]);
+			var newSlides = storage.getItem("sequences");
+			expect(newSlides).toEqual([[1, 2, 3, 4],[5]]);
 		});
 
 		it("should reflect the creation of new slides", function(){
 			slide.next();
 			slide.previous();
-			expect(storage.getItem("slides")).toEqual([content, 5, content]);
+			expect(storage.getItem("sequences")).toEqual([[1, 2, 3, 4],[content, 5, content]]);
 		});
 	});
 
@@ -60,7 +60,7 @@ describe("a slide history", function(){
 		var slide;
 
 		beforeEach(function(){
-			storage.setItem("slides", [1]);
+			storage.setItem("sequences", [[1]]);
 			slide = instance.findOrCreateSlide();
 		});
 
@@ -72,7 +72,7 @@ describe("a slide history", function(){
 		it("should reflect the creation of new slides", function(){
 			slide.next();
 			slide.previous();
-			expect(storage.getItem("slides")).toEqual([content, 1, content]);
+			expect(storage.getItem("sequences")).toEqual([[content, 1, content]]);
 		});
 	});
 
@@ -80,20 +80,20 @@ describe("a slide history", function(){
 		var slide;
 
 		beforeEach(function(){
-			storage.setItem("slides", []);
+			storage.setItem("sequences", []);
 			slide = instance.findOrCreateSlide();
 		});
 
 		it("should create one", function(){
 			expect(slide).toBeTruthy();
 			expect(slide.content).toBe(content);
-			expect(storage.getItem("slides")).toEqual([content]);
+			expect(storage.getItem("sequences")).toEqual([[content]]);
 		});
 
 		it("should reflect the creation of new slides", function(){
 			slide.next();
 			slide.previous();
-			expect(storage.getItem("slides")).toEqual([content, content, content]);
+			expect(storage.getItem("sequences")).toEqual([[content, content, content]]);
 		});
 	});
 });
