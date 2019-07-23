@@ -17,6 +17,23 @@ var f = function(require){
 	Instruction.prototype.chooseFieldIndex = function(fieldIndex){
 		this.fieldIndices.push(fieldIndex);
 	};
+	Instruction.prototype.getYear = function(){
+		var year = 0;
+		for(var i=0;i<this.splitPoints.length && i<20;i++){
+			year = (year + this.splitPoints[i] * 35) % 72;
+		}
+		return 1872 + year;
+	};
+	Instruction.prototype.getSerialNumber = function(){
+		var result = 0;
+		for(var i=0;i<this.splitPoints.length && i<20;i++){
+			result = (result + this.splitPoints[i] * 5) % 13;
+		}
+		return 1 + result;
+	};
+	Instruction.prototype.getTitle = function(){
+		return "Untitled "+ this.getSerialNumber() +" (" + this.getYear() + ")";
+	};
 	Instruction.prototype.toString = function(){
 		var readable = ""+this.width+";"+this.height+";"+this.borderThickness+";"+this.numberOfSplits+";"+this.fieldIndices.join(",")+";"+this.directions.join("")+";"+this.colors.map(this.getColorCode).join("")+";"+this.splitPoints.join(",");
 		return base64.encode(readable);
