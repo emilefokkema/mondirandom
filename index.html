@@ -71,11 +71,11 @@
 		      </svg>
 		      <span>Download Wallpaper</span>
 		    </a>
-		    <a href="#Leanback" data-type="link" class="menu__item menu__item--leanback">
+		    <a href="#Leanback" data-type="link" class="menu__item menu__item--leanback" v-on:click="onLeanBackClick">
 		      <svg xmlns="http://www.w3.org/2000/svg" class="icon ">
 		        <use xlink:href="#slideshow"></use>
 		      </svg>
-		      <span>Start Leanback Mode</span>
+		      <span>{{leanBackText}}</span>
 		    </a>
 		  </div>
 		</div>
@@ -182,7 +182,7 @@
       </a>
     </div>
 
-    <linkmenu v-on:about="toggleAbout" v-on:downloadimage="downloadImage"></linkmenu>
+    <linkmenu v-on:about="toggleAbout" v-on:downloadimage="downloadImage" v-on:toggleleanback="toggleLeanBack" v-bind:leaningback="leaningBack"></linkmenu>
     <share v-bind:sharelink="shareLink" v-on:sharedeeplink="shareDeeplink"></share>
   </div>
 

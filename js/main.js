@@ -22,7 +22,6 @@ var f = function(require){
 		  document.body.classList.add(`browser--${browserName}`);
 		}
 	};
-	
 	var toggleClass = function(el, className, present){
 		var classes = el.getAttribute("class").match(/[^\s]+/g);
 		var newClasses = [];
@@ -51,7 +50,8 @@ var f = function(require){
 				aboutActive:false,
 				slide: undefined,
 				config: undefined,
-				deepLinkOverlayActive: false
+				deepLinkOverlayActive: false,
+				leanBackInterval:undefined
 			};
 		},
 		computed:{
@@ -60,12 +60,28 @@ var f = function(require){
 					return "https://emilefokkema.github.io/mondirandom/?i="+(this.slide.content || "").toString();
 				}
 				
+			},
+			leaningBack:function(){
+				return this.leanBackInterval !== undefined;
 			}
 		},
 		methods:{
 			explore:function(){
 				toggleClass(document.body, "page--home", false);
 				this.replaceHistoryWithCurrentSlide();
+			},
+			toggleLeanBack:function(){
+				var self = this;
+				if(this.leaningBack){
+					toggleClass(document.body, "leanback", false);
+					clearInterval(this.leanBackInterval);
+					this.leanBackInterval = undefined;
+				}else{
+					toggleClass(document.body, "leanback", true);
+					this.leanBackInterval = setInterval(function(){
+						self.moveNextSlide();
+					}, 5000);
+				}
 			},
 			downloadImage:function(){
 				var canvas = this.getCanvas();
@@ -153,7 +169,15 @@ var f = function(require){
 		},
 		components:{
 			'linkmenu':{
+				props:{
+					leaningback:Boolean
+				},
 				template:document.getElementById("menu-template").innerHTML,
+				computed:{
+					leanBackText:function(){
+						return this.leaningback ? "Stop Leanback Mode" : "Start Leanback Mode";
+					}
+				},
 				methods:{
 					onAboutClick:function(){
 						this.$emit("about");
@@ -161,6 +185,9 @@ var f = function(require){
 					handleDownloadClick:function(event){
 						this.$emit("downloadimage");
 						event.preventDefault();
+					},
+					onLeanBackClick:function(){
+						this.$emit("toggleleanback");
 					}
 				}
 			},
