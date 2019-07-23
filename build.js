@@ -17,12 +17,18 @@ var dir = './dist';
 if (!fs.existsSync(dir)){
     fs.mkdirSync(dir);
 }
-fs.copyFile('manifest.json', 'dist/manifest.json', (err) => {
-  if (err) throw err;
-});
-fs.copyFile('newtab.css', 'dist/newtab.css', (err) => {
-  if (err) throw err;
-});
+var filesToCopy = [
+	"manifest.json",
+	"newtab.css",
+	"icon_128.png",
+	"icon_48.png",
+	"icon_16.png"
+];
+for(var i=0;i<filesToCopy.length;i++){
+	fs.copyFile(filesToCopy[i], 'dist/'+filesToCopy[i], (err) => {
+	  if (err) throw err;
+	});
+}
 fs.readFile('newtab.html', function(err, buf){
 	if (err) throw err;
 	var originalIndex = buf.toString();
