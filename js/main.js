@@ -2,6 +2,7 @@ var f = function(require){
 	var Vue = require("vue");
 	var CanvasWithSize = require("./canvas-with-size");
 	var Instruction = require("./instruction");
+	var downloadDataUrlWithName = require("./download-data-url-with-name");
 	var Slide = require("./slide");
 	var configProvider = require("./config-provider");
 	var storage = require("./storage");
@@ -21,6 +22,7 @@ var f = function(require){
 		  document.body.classList.add(`browser--${browserName}`);
 		}
 	};
+	
 	var toggleClass = function(el, className, present){
 		var classes = el.getAttribute("class").match(/[^\s]+/g);
 		var newClasses = [];
@@ -64,6 +66,11 @@ var f = function(require){
 			explore:function(){
 				toggleClass(document.body, "page--home", false);
 				this.replaceHistoryWithCurrentSlide();
+			},
+			downloadImage:function(){
+				var canvas = this.getCanvas();
+				canvas.displayMondirandom(Instruction.parse(this.slide.content));
+				downloadDataUrlWithName(canvas.toDataURL("image/png"), "mondirandom.png");
 			},
 			copyDeepLink:function(){
 				this.$refs.deepLinkInput.focus();
@@ -150,6 +157,10 @@ var f = function(require){
 				methods:{
 					onAboutClick:function(){
 						this.$emit("about");
+					},
+					handleDownloadClick:function(event){
+						this.$emit("downloadimage");
+						event.preventDefault();
 					}
 				}
 			},

@@ -65,7 +65,7 @@
 		      </svg>
 		      <span>Extension Details</span>
 		    </a>
-		    <a href="/download/1018.jpg" target="_blank" data-type="link" class="menu__item menu__item--download" download>
+		    <a href="#download" target="_blank" data-type="link" class="menu__item menu__item--download" v-on:click="handleDownloadClick">
 		      <svg xmlns="http://www.w3.org/2000/svg" class="icon ">
 		        <use xlink:href="#download"></use>
 		      </svg>
@@ -182,7 +182,7 @@
       </a>
     </div>
 
-    <linkmenu v-on:about="toggleAbout"></linkmenu>
+    <linkmenu v-on:about="toggleAbout" v-on:downloadimage="downloadImage"></linkmenu>
     <share v-bind:sharelink="shareLink" v-on:sharedeeplink="shareDeeplink"></share>
   </div>
 

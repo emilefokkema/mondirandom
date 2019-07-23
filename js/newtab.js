@@ -2,6 +2,7 @@ var f = function(require){
 	var Instruction = require("./instruction");
 	var CanvasWithSize = require("./canvas-with-size");
 	var configProvider = require("./config-provider");
+	var downloadDataUrlWithName = require("./download-data-url-with-name");
 	var history = require("./history");
 	var Vue = require("../node_modules/vue/dist/vue");
 	var determineBrowser = function(){
@@ -18,15 +19,6 @@ var f = function(require){
 		if (browserName) {
 		  document.body.classList.add(`browser--${browserName}`);
 		}
-	};
-	var downloadDataUrlWithName = function(dataUrl, name){
-		var a = document.createElement('a');
-		var event = new MouseEvent('click',{});
-		a.setAttribute('href',dataUrl);
-		a.setAttribute('download',name);
-		document.body.appendChild(a);
-		a.dispatchEvent(event);
-		document.body.removeChild(a);
 	};
 
 	determineBrowser();
