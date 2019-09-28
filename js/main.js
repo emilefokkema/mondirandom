@@ -127,7 +127,11 @@ var f = function(require){
 				var canvas = this.getCanvas();
 				canvas.displayMondirandom(instruction);
 				this.displayMondirandom(canvas);
-				document.title = instruction.getTitle();
+				this.setTitle(instruction.getTitle());
+			},
+			setTitle: function(title){
+				document.title = title;
+				document.getElementById("og_title").setAttribute("content", title);
 			},
 			pushCurrentSlideToHistory:function(){
 				window.history.pushState(this.slide.toJSON(), "", "?i="+this.slide.content);
